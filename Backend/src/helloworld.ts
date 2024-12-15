@@ -1,3 +1,3 @@
 console.log("TypeScriptWorld")
 
-print("hey")
+console.log("hey")
