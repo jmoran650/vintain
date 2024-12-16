@@ -83,8 +83,13 @@ export class Credentials {
 
 }
 
-// export async function createSchema() {
-//   return await buildSchema({
-//     resolvers: [HelloResolver],
-//   });
-// }
+@InputType()
+@ObjectType()
+export class SessionAccount {
+
+  @Field()
+  @MinLength(1)
+  id!: string;
+
+}
+

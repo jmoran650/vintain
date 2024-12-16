@@ -1,9 +1,16 @@
 import "reflect-metadata";
 import express from "express";
 import { createHandler } from "graphql-http/lib/use/express";
-import { createSchema } from "./graphql/schema";
+import {AuthResolver} from "./graphql/resolver"
 import { pool } from "./db";
+import {buildSchema} from "type-graphql";
 
+
+export async function createSchema() {
+  return await buildSchema({
+    resolvers: [AuthResolver],
+  });
+}
 async function main() {
   // Optionally test the database connection:
   const client = await pool.connect();
