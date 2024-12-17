@@ -1,6 +1,7 @@
 -- 2.schema.sql
 -- Enable pgcrypto for UUID generation and crypt()
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+\connect authdb
 
 -- Create the account table
 CREATE TABLE account (

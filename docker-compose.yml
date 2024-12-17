@@ -9,9 +9,8 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./microservices/database/sql/1.databases.sql:/docker-entrypoint-initdb.d/1.databases.sql
-      - ./microservices/database/sql/2.schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
-      - ./microservices/database/sql/3.data.sql:/docker-entrypoint-initdb.d/3.data.sql
+      - ./microservices/database/sql/schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
+      - ./microservices/database/sql/data.sql:/docker-entrypoint-initdb.d/3.data.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
       interval: 10s
