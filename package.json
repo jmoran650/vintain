@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:auth": "npm --prefix ./microservices/auth run test"
+    "test:auth": "npm --prefix ./microservices/auth run test",
+    "test:account": "npm --prefix ./microservices/account run test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "supertest": "^7.0.0"
   }
 }

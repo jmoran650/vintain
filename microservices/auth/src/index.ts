@@ -11,7 +11,7 @@ export async function createSchema() {
     resolvers: [AuthResolver],
   });
 }
-async function main() {
+async function app() {
   // Optionally test the database connection:
   const client = await pool.connect();
   const res = await client.query("SELECT NOW()");
@@ -26,8 +26,6 @@ async function main() {
     "/graphql",
     createHandler({
       schema: schema,
-      // rootValue is not needed if you're using resolvers defined by type-graphql.
-      // The `hello` query is provided by your HelloResolver.
     })
   );
 
@@ -35,6 +33,8 @@ async function main() {
   console.log("Running a GraphQL API server at http://localhost:4000/graphql");
 }
 
-main().catch((err) => {
+app().catch((err) => {
   console.error("Failed to start server", err);
 });
+
+export { app }

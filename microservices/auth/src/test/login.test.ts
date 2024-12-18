@@ -2,6 +2,31 @@ import { request, gql } from 'graphql-request';
 
 const endpoint = process.env.AUTH_ENDPOINT || 'http://localhost:4001/graphql';
 
+
+import supertest from 'supertest';
+import * as http from 'http';
+
+import * as db from './db';
+import {app} from '../index';
+let server: http.Server<
+  typeof http.IncomingMessage,
+  typeof http.ServerResponse
+>;
+
+beforeAll(async () => {
+  server = http.createServer(app);
+  server.listen();
+  return db.reset();
+}, 10000);
+
+afterAll((done) => {
+  db.shutdown(() => {
+    server.close(done);
+  });
+  //server.close(done);
+});
+
+
 interface LoginResponse {
   login: {
     id: string;
