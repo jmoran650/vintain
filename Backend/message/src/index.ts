@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import express from "express";
 import { createHandler } from "graphql-http/lib/use/express";
-import { ListingResolver } from "./graphql/resolver";
+import { MessageResolver } from "./graphql/resolver";
 import { pool } from "./db";
 import { buildSchema } from "type-graphql";
 
 export async function createSchema() {
   return await buildSchema({
-    resolvers: [ListingResolver],
+    resolvers: [MessageResolver],
   });
 }
 

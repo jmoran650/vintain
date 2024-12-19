@@ -1,6 +1,6 @@
 //src/schema.ts
 
-import { Resolver, Query, buildSchema, Ctx, ObjectType, InputType, Field } from "type-graphql";
+import { ObjectType, InputType, Field } from "type-graphql";
 import {Request} from "express";
 import {MinLength} from 'class-validator';
 

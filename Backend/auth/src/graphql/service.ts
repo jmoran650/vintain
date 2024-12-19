@@ -1,7 +1,6 @@
 import { pool } from "../db";
 import * as jwt from "jsonwebtoken";
 import { Credentials, Authenticated, Account, SessionAccount } from "./schema";
-import { randomUUID } from "crypto";
 
 export class AuthService {
 
