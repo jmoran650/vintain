@@ -17,7 +17,7 @@ export class AccountResolver {
   // @Authorized('someRole') Put role authorizations right here
   @Query((_returns) => Account)
   async account(@Ctx() _req: Request, @Arg('input') ID: UUID): Promise<Account> {
-    console.log('Getting Account');
+    //console.log('Getting Account');
     const result = await new AccountService().getAccount(ID);
     return result;
   }
@@ -58,7 +58,7 @@ export class AccountResolver {
     @Ctx() _request: Request
   ): Promise<Account> {
     NewAccount.email = NewAccount.email.toLowerCase();
-    console.log('Making New Account:', NewAccount.firstName);
+    //console.log('Making New Account:', NewAccount.firstName);
     const result = await new AccountService().makeAccount(NewAccount);
     return result;
   }
@@ -68,9 +68,9 @@ export class AccountResolver {
     @Arg('input') accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    console.log('Deleting account', accountID);
+    //console.log('Deleting account', accountID);
     const result = await new AccountService().deleteAccount(accountID);
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 
@@ -80,11 +80,11 @@ export class AccountResolver {
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    console.log('Deleting account', accountEmail);
+    //console.log('Deleting account', accountEmail);
     const result = await new AccountService().deleteAccountByEmail(
       accountEmail
     );
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 
@@ -93,9 +93,9 @@ export class AccountResolver {
     @Arg('input') accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    console.log('Suspending account', accountID);
+    //console.log('Suspending account', accountID);
     const result = await new AccountService().suspendAccount(accountID);
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 
@@ -105,11 +105,11 @@ export class AccountResolver {
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    console.log('Suspending account', accountEmail);
+    //console.log('Suspending account', accountEmail);
     const result = await new AccountService().suspendAccountByEmail(
       accountEmail
     );
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 
@@ -118,9 +118,9 @@ export class AccountResolver {
     @Arg('input') accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    console.log('Suspending account', accountID);
+    //console.log('Suspending account', accountID);
     const result = await new AccountService().resumeAccount(accountID);
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 
@@ -130,11 +130,11 @@ export class AccountResolver {
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    console.log('Suspending account', accountEmail);
+    //console.log('Suspending account', accountEmail);
     const result = await new AccountService().resumeAccountByEmail(
       accountEmail
     );
-    console.log('Success?:', result);
+    //console.log('Success?:', result);
     return result;
   }
 }

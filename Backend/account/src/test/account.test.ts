@@ -418,7 +418,7 @@ it('Can get all accounts', async () => {
     .expect(200)
     .then((res) => {
       expect(res.body.errors).toBeUndefined();
-      console.log('RES GET ALL ACCOUNTSA:', res.body);
+      //console.log('RES GET ALL ACCOUNTSA:', res.body);
       expect(res.body.data.allAccounts.length).toBeGreaterThan(0);
     });
 });
