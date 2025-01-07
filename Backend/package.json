@@ -1,0 +1,50 @@
+{
+  "name": "vintain-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message",
+    "test:auth": "jest --config jest.config.js --testPathPattern='src/auth/test/' --runInBand",
+    "test:account": "jest --config jest.config.js --testPathPattern='src/account/test/' --runInBand",
+    "test:listing": "jest --config jest.config.js --testPathPattern='src/listing/test/' --runInBand",
+    "test:message": "jest --config jest.config.js --testPathPattern='src/message/test/' --runInBand"
+    
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "class-validator": "^0.14.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "graphql": "^16.10.0",
+    "graphql-http": "^1.22.3",
+    "graphql-request": "^7.1.2",
+    "http": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "supertest": "^7.0.0",
+    "type-graphql": "^2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@types/express": "^5.0.0",
+    "@types/graphql": "^14.5.0",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.10.2",
+    "@types/pg": "^8.11.10",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

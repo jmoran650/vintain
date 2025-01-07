@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+
+    // For NestJS/TypeGraphQL/other decorators
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // Keep your life simpler
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Where compiled JS goes
+    "outDir": "dist",
+
+    // The root where TS looks for source .ts files
+    // '.' means "the same directory as tsconfig.json"
+    "rootDir": "."
+  },
+
+  // Tell TypeScript which files/folders to include
+  // Here we say "any .ts file in any subfolder"
+  "include": [
+    "**/*.ts"
+  ],
+
+  // Usually exclude node_modules and the dist build folder
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

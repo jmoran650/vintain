@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message",
-    "test:auth": "npm --prefix ./Backend/auth run test",
-    "test:account": "npm --prefix ./Backend/account run test",
-    "test:listing": "npm --prefix ./Backend/listing run test",
-    "test:message": "npm --prefix ./Backend/message run test"
+    "test:auth": "npx jest --testPathPattern 'Backend/auth/' --runInBand",
+    "test:account": "npx jest --testPathPattern 'Backend/account/' --runInBand",
+    "test:listing": "npx jest --testPathPattern 'Backend/listing/' --runInBand",
+    "test:message": "npx jest --testPathPattern 'Backend/message/' --runInBand"
   },
   "keywords": [],
   "author": "",
