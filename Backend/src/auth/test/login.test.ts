@@ -14,7 +14,7 @@ let server: http.Server<
 >;
 
 beforeAll(async () => {
-  await resetForDomain("message");
+  await resetForDomain("auth");
 
   const app = await createApp();
   server = http.createServer(app);

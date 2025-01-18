@@ -11,11 +11,15 @@ CREATE TABLE account (
   restricted boolean NOT NULL DEFAULT false
 );
 
+DROP TABLE IF EXISTS listing CASCADE;
+
 CREATE TABLE listing (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   owner_id uuid NOT NULL,
   data jsonb NOT NULL
 );
+
+DROP TABLE IF EXISTS message CASCADE;
 
 CREATE TABLE message (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -41,20 +45,6 @@ CREATE TABLE orders (
   item_id uuid NOT NULL,
   
   -- Possibly a JSONB for extra data (items, totals, addresses, etc.)
-  data jsonb,
-  
-  CONSTRAINT fk_order_buyer
-    FOREIGN KEY (buyer_id)
-    REFERENCES account (id)
-    ON DELETE CASCADE,
+  data jsonb
 
-  CONSTRAINT fk_order_seller
-    FOREIGN KEY (seller_id)
-    REFERENCES account (id)
-    ON DELETE CASCADE,
-  
-  CONSTRAINT fk_order_item
-    FOREIGN KEY (id)
-    REFERENCES listing (id)
-    --No on delete cascade as far as I can tell idk why an order would ever be deleted
 );

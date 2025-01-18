@@ -12,7 +12,8 @@
     "test:auth": "jest --config jest.config.js --testPathPattern='src/auth/test/' --runInBand",
     "test:account": "jest --config jest.config.js --testPathPattern='src/account/test/' --runInBand",
     "test:listing": "jest --config jest.config.js --testPathPattern='src/listing/test/' --runInBand",
-    "test:message": "jest --config jest.config.js --testPathPattern='src/message/test/' --runInBand"
+    "test:message": "jest --config jest.config.js --testPathPattern='src/message/test/' --runInBand",
+    "test:orders": "jest --config jest.config.js --testPathPattern='src/orders/test/' --runInBand"
     
   },
   "keywords": [],

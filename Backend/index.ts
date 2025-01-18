@@ -13,6 +13,7 @@ import { AccountResolver } from "./src/account/graphql/resolver";
 import { AuthResolver } from "./src/auth/graphql/resolver";
 import { ListingResolver } from "./src/listing/graphql/resolver";
 import { MessageResolver } from "./src/message/graphql/resolver";
+import { OrderResolver } from "./src/orders/graphql/resolver";
 
 // Create a single database pool
 export const pool = new Pool({
@@ -29,6 +30,7 @@ async function createSchema() {
       AccountResolver,
       ListingResolver,
       MessageResolver,
+      OrderResolver
     ],
   });
 }
