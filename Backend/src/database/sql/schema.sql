@@ -54,7 +54,7 @@ CREATE TABLE orders (
     ON DELETE CASCADE,
   
   CONSTRAINT fk_order_item
-    FOREIGN KEY (id)
+    FOREIGN KEY (item_id)
     REFERENCES listing (id)
     --No on delete cascade as far as I can tell idk why an order would ever be deleted
 );

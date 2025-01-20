@@ -11,6 +11,7 @@ export class OrderService {
         id,
         buyer_id,
         seller_id,
+        item_id,
         shipping_status,
         data
       FROM orders
@@ -47,6 +48,7 @@ export class OrderService {
         id,
         buyer_id,
         seller_id,
+        item_id,
         shipping_status,
         data
       FROM orders
