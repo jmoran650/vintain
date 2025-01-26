@@ -1,37 +1,40 @@
-import {Field, InputType, ObjectType} from 'type-graphql';
-import {MinLength} from 'class-validator';
+// Backend/src/auth/graphql/schema.ts
 
+import { ObjectType, InputType, Field } from "type-graphql";
+import { MinLength } from "class-validator";
 
-/**
- * From https://tsoa-community.github.io/docs/examples.html
- * Stringified UUIDv4.
- * See [RFC 4112](https://tools.ietf.org/html/rfc4122)
- * @pattern [0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}
- * @format uuid
- */
 export type UUID = string;
-
-/**
- * From https://tsoa-community.github.io/docs/examples.html
- * Stringified UUIDv4.
- * See [RFC 4112](https://tools.ietf.org/html/rfc4122)
- * @pattern ^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$
- * @format email
- */
 export type Email = string;
 
 @ObjectType()
-export class AccountName {
-    @Field()
-    @MinLength(1)
-    first!:string
-    
-    @Field()
-    @MinLength(1)
-    last!:string
+export class Name {
+  @Field()
+  @MinLength(1)
+  first!: string;
+
+  @Field()
+  @MinLength(1)
+  last!: string;
 }
 
-@InputType()
+/**
+ * A profile object with required `username` and optional `bio`.
+ */
+@ObjectType()
+export class Profile {
+  // Make username non-null in GraphQL
+  @Field()
+  @MinLength(1)
+  username!: string;
+
+  @Field({ nullable: true })
+  bio?: string;
+}
+
+/**
+ * The Account object includes `profile` as a non-null field,
+ * so we always return an object (even if it has default values).
+ */
 @ObjectType()
 export class Account {
   @Field()
@@ -41,15 +44,23 @@ export class Account {
   email!: Email;
 
   @Field()
-  name!: AccountName;
+  name!: Name;
 
   @Field(() => [String!])
   roles!: string[];
 
   @Field()
   restricted!: boolean;
+
+  // Profile is always defined, but inside it `username` is required, `bio` is optional.
+  @Field(() => Profile)
+  profile!: Profile;
 }
 
+/**
+ * Input for creating a new account.
+ * We now require `username`, while `bio` remains optional.
+ */
 @InputType()
 @ObjectType()
 export class NewAccount {
@@ -70,4 +81,11 @@ export class NewAccount {
 
   @Field(() => [String!])
   roles!: string[];
+
+  @Field()
+  @MinLength(1)
+  username!: string;
+
+  @Field({ nullable: true })
+  bio?: string;
 }

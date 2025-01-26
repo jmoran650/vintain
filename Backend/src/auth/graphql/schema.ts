@@ -1,5 +1,4 @@
-//src/schema.ts
-
+//Backend/src/auth/graphql/schema.ts
 import { ObjectType, InputType, Field } from "type-graphql";
 import {Request} from "express";
 import {MinLength} from 'class-validator';

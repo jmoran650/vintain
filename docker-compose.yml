@@ -10,8 +10,7 @@ services:
     volumes:
       # Mount your .sql files if you want Postgres to run them on first startup
       - ./Backend/src/database/sql/schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
-      # not currently loading any data
-      # - ./Backend/src/database/sql/data.sql:/docker-entrypoint-initdb.d/3.data.sql
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
       interval: 10s

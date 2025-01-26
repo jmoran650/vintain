@@ -1,23 +1,19 @@
+//Backend/src/auth/graphql/resolver.ts
 import { Resolver, Query, Ctx, Arg } from "type-graphql";
-import {
-    Authenticated,
-    Credentials,
-    SessionAccount
-  } from './schema';
-import {AuthService} from "./service"
+import { Authenticated, Credentials, SessionAccount } from "./schema";
+import { AuthService } from "./service";
 
 @Resolver()
-export class AuthResolver{
+export class AuthResolver {
   @Query(() => Authenticated)
   async login(
     @Ctx() req: Request,
-    @Arg('input') creds: Credentials
+    @Arg("input") creds: Credentials
   ): Promise<Authenticated> {
-
     const account = await new AuthService().login(creds);
-    if(!account) {
+    if (!account) {
       return new Promise<Authenticated>((_res, reject) => {
-        reject(new Error('Invalid Credentials'));
+        reject(new Error("Invalid Credentials"));
       });
     }
     return account;
@@ -26,7 +22,7 @@ export class AuthResolver{
   @Query((returns) => SessionAccount)
   async check(
     @Ctx() req: Request,
-    @Arg('input') accessToken: string
+    @Arg("input") accessToken: string
   ): Promise<SessionAccount> {
     //console.log('Check attempt');
     const account = await new AuthService().check(accessToken);
@@ -34,6 +30,4 @@ export class AuthResolver{
     //console.log('Check Received:', account);
     return account;
   }
-
-
 }

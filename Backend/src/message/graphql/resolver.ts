@@ -1,3 +1,4 @@
+//Backend/src/message/graphql/resolver.ts
 import { Query, Resolver, Ctx, Mutation, Arg } from 'type-graphql';
 import { Request } from 'express';
 import { MessageService } from './service';

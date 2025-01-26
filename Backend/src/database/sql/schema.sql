@@ -1,3 +1,4 @@
+--Backend/src/database/sql/schema.sql
 -- 2.schema.sql
 -- Enable pgcrypto for UUID generation and crypt()
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -56,5 +57,4 @@ CREATE TABLE orders (
   CONSTRAINT fk_order_item
     FOREIGN KEY (item_id)
     REFERENCES listing (id)
-    --No on delete cascade as far as I can tell idk why an order would ever be deleted
 );

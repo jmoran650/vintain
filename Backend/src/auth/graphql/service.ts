@@ -1,9 +1,9 @@
+//Backend/src/auth/graphql/service.ts
 import { pool } from "../../../db";
 import * as jwt from "jsonwebtoken";
 import { Credentials, Authenticated, Account, SessionAccount } from "./schema";
 
 export class AuthService {
-
   private async find(creds: Credentials): Promise<Account | undefined> {
     const select = `SELECT id, email, data->'name' as name, data->'roles' as roles FROM account 
     WHERE email = $1 AND
@@ -35,22 +35,22 @@ export class AuthService {
       `${process.env.MASTER_SECRET}`,
       { algorithm: "HS256" }
     );
-    
-    return {id: account.id, name: account.name, accessToken: accessToken};
+
+    return { id: account.id, name: account.name, accessToken: accessToken };
   }
 
-  public async check(accessToken:string): Promise<SessionAccount>{
-    return new Promise((resolve, reject)=>{
+  public async check(accessToken: string): Promise<SessionAccount> {
+    return new Promise((resolve, reject) => {
       try {
         jwt.verify(
           accessToken,
           `${process.env.MASTER_SECRET}`,
-          (err: jwt.VerifyErrors | null,  decoded?: object | string) => {
-            if(err){
-              reject(err)
+          (err: jwt.VerifyErrors | null, decoded?: object | string) => {
+            if (err) {
+              reject(err);
             }
-            const account = decoded as {id: string};
-            resolve({id: account.id})
+            const account = decoded as { id: string };
+            resolve({ id: account.id });
           }
         );
       } catch (e) {
@@ -58,6 +58,4 @@ export class AuthService {
       }
     });
   }
-
-  
 }

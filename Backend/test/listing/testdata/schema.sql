@@ -1,6 +1,7 @@
 -- 2.schema.sql
 -- Enable pgcrypto for UUID generation and crypt()
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 DROP TABLE IF EXISTS listing CASCADE;
 
 CREATE TABLE listing (

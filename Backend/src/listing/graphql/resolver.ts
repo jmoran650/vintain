@@ -1,31 +1,64 @@
-import { Query, Resolver, Ctx, Mutation, Arg } from 'type-graphql';
-import { Request } from 'express';
-import { ListingService } from './service';
-import { Listing, NewListing, UUID } from './schema';
+//Backend/src/listing/graphql/resolver.ts
+import { Query, Resolver, Mutation, Arg, Int, Ctx } from "type-graphql";
+import { Request } from "express";
+import { ListingService } from "./service";
+import { Listing, NewListing, UUID, PaginatedListings } from "./schema";
 
 @Resolver()
 export class ListingResolver {
-  @Query((_returns) => Listing)
-  async listing(@Ctx() _req: Request, @Arg('input') id: UUID): Promise<Listing> {
-    const result = await new ListingService().getListing(id);
-    return result;
+  /**
+   * Get a single listing by ID.
+   */
+  @Query(() => Listing)
+  async listing(@Ctx() _req: Request, @Arg("id") id: UUID): Promise<Listing> {
+    return new ListingService().getListing(id);
   }
 
-  @Query((_returns) => [Listing])
-  async allListings(@Ctx() _req: Request): Promise<Listing[]> {
-    const result = await new ListingService().getAllListings();
-    return result;
+  /**
+   * Get paginated listings.
+   */
+  @Query(() => PaginatedListings)
+  async allListings(
+    @Ctx() _req: Request,
+    @Arg("page", () => Int, { defaultValue: 1 }) page: number,
+    @Arg("pageSize", () => Int, { defaultValue: 10 }) pageSize: number
+  ): Promise<PaginatedListings> {
+    return new ListingService().getAllListings(page, pageSize);
   }
 
-  @Mutation((_returns) => Listing)
-  async createListing(@Arg('input') listingInfo: NewListing, @Ctx() _req: Request): Promise<Listing> {
-    const result = await new ListingService().createListing(listingInfo);
-    return result;
+  /**
+   * Create a new listing.
+   */
+  @Mutation(() => Listing)
+  async createListing(
+    @Arg("input") listingInfo: NewListing,
+    @Ctx() _req: Request
+  ): Promise<Listing> {
+    return new ListingService().createListing(listingInfo);
   }
 
-  @Mutation((_returns) => Boolean)
-  async deleteListing(@Arg('input') listingId: UUID, @Ctx() _req: Request): Promise<boolean> {
-    const result = await new ListingService().deleteListing(listingId);
-    return result;
+  /**
+   * Delete a listing by ID.
+   */
+  @Mutation(() => Boolean)
+  async deleteListing(
+    @Arg("id") listingId: UUID,
+    @Ctx() _req: Request
+  ): Promise<boolean> {
+    return new ListingService().deleteListing(listingId);
+  }
+
+  @Query(() => PaginatedListings)
+  async searchListings(
+    @Arg("searchTerm") searchTerm: string,
+    @Arg("page", () => Int, { defaultValue: 1 }) page: number,
+    @Arg("pageSize", () => Int, { defaultValue: 10 }) pageSize: number
+  ): Promise<PaginatedListings> {
+    const { listings, totalCount } = await new ListingService().searchListings(
+      searchTerm,
+      page,
+      pageSize
+    );
+    return { listings, totalCount };
   }
 }
