@@ -1,9 +1,8 @@
-//Backend/src/listing/graphql/schema.ts
+// src/listing/graphql/schema.ts
+
 import { Field, InputType, ObjectType, Int } from "type-graphql";
 import { MinLength } from "class-validator";
-
-/** Our custom type for UUID strings. */
-export type UUID = string;
+import { UUID } from "../../common/types";
 
 @ObjectType()
 export class Listing {
@@ -51,8 +50,7 @@ export class NewListing {
 }
 
 /**
- * For returning paginated listing results
- * (listings + totalCount).
+ * For returning paginated listing results (listings + totalCount).
  */
 @ObjectType()
 export class PaginatedListings {

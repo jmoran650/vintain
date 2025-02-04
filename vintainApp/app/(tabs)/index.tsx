@@ -1,4 +1,3 @@
-// vintainApp/app/(tabs)/index.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View, Text, Button, TextInput, FlatList, StyleSheet, TouchableOpacity,
@@ -6,7 +5,6 @@ import {
 import { useRouter } from 'expo-router';
 import { fetchAllListings, searchListings } from '../../src/apiService';
 
-// Optionally define a small interface for your listing
 interface Listing {
   id: string;
   brand: string;
@@ -87,74 +85,98 @@ export default function ListingListScreen() {
         <Text style={styles.listItemTitle}>
           {item.brand} - {item.name}
         </Text>
-        <Text numberOfLines={2}>{item.description}</Text>
+        <Text numberOfLines={2} style={styles.listItemDescription}>{item.description}</Text>
       </TouchableOpacity>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Listing List</Text>
+      <Text style={styles.title}>Vintage Listings</Text>
 
-      {/* Search bar */}
       <View style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
           placeholder="Search brand/description..."
+          placeholderTextColor="#8d6e63"
           value={searchTerm}
           onChangeText={setSearchTerm}
         />
-        <Button title="Search" onPress={onSearch} />
-        <Button title="Clear" onPress={onClearSearch} />
+        <Button title="Search" onPress={onSearch} color="#8d6e63" />
+        <Button title="Clear" onPress={onClearSearch} color="#a1887f" />
       </View>
 
-      {/* Listing list */}
       <FlatList
         data={listings}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
 
-      {/* Pagination controls */}
       <View style={styles.paginationRow}>
-        <Button title="Prev" onPress={onPrevPage} disabled={page === 1} />
-        <Text>Page {page}</Text>
-        <Button title="Next" onPress={onNextPage} disabled={(page * pageSize) >= totalCount} />
+        <Button title="Prev" onPress={onPrevPage} disabled={page === 1} color="#8d6e63" />
+        <Text style={styles.pageText}>Page {page}</Text>
+        <Button title="Next" onPress={onNextPage} disabled={(page * pageSize) >= totalCount} color="#8d6e63" />
       </View>
 
-      <Text>Total: {totalCount}</Text>
+      <Text style={styles.totalText}>Total Listings: {totalCount}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  title: { fontSize: 22, textAlign: 'center', marginBottom: 8 },
+  container: { flex: 1, padding: 16, backgroundColor: '#fff8e1' },
+  title: { fontSize: 26, textAlign: 'center', marginBottom: 16, fontFamily: 'SpaceMono', color: '#3e2723' },
   searchRow: {
     flexDirection: 'row',
-    marginBottom: 8,
+    marginBottom: 12,
     alignItems: 'center',
   },
   searchInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#8d6e63',
+    borderRadius: 8,
     padding: 8,
     marginRight: 4,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+    backgroundColor: '#fff',
   },
   listItem: {
-    backgroundColor: '#f0f0f0',
-    marginVertical: 4,
+    backgroundColor: '#f7f1e3',
+    marginVertical: 6,
     padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#d7ccc8',
   },
   listItemTitle: {
     fontWeight: 'bold',
     marginBottom: 4,
+    fontSize: 18,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+  },
+  listItemDescription: {
+    fontSize: 14,
+    color: '#5d4037',
+    fontFamily: 'SpaceMono',
   },
   paginationRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 8,
+    marginTop: 16,
     alignItems: 'center',
+  },
+  pageText: {
+    fontFamily: 'SpaceMono',
+    fontSize: 16,
+    color: '#3e2723',
+  },
+  totalText: {
+    textAlign: 'center',
+    marginTop: 8,
+    fontFamily: 'SpaceMono',
+    color: '#3e2723',
   },
 });

@@ -7,12 +7,12 @@
     "dev": "ts-node src/index.ts",
     "build": "tsc",
     "start": "tsc && node dist/index.js",
-    "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message",
-    "test:auth": "jest --config jest.config.js --testPathPattern='src/auth/test/' --runInBand",
-    "test:account": "jest --config jest.config.js --testPathPattern='src/account/test/' --runInBand",
-    "test:listing": "jest --config jest.config.js --testPathPattern='src/listing/test/' --runInBand",
-    "test:message": "jest --config jest.config.js --testPathPattern='src/message/test/' --runInBand",
-    "test:orders": "jest --config jest.config.js --testPathPattern='src/orders/test/' --runInBand"
+    "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message && npm run test:orders",
+    "test:auth": "jest --config jest.config.js --testPathPattern='tests/domains/auth/' --runInBand",
+    "test:account": "jest --config jest.config.js --testPathPattern='tests/domains/account/' --runInBand",
+    "test:listing": "jest --config jest.config.js --testPathPattern='tests/domains/listing/' --runInBand",
+    "test:message": "jest --config jest.config.js --testPathPattern='tests/domains/message/' --runInBand",
+    "test:orders": "jest --config jest.config.js --testPathPattern='tests/domains/orders/' --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +30,8 @@
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "supertest": "^7.0.0",
-    "type-graphql": "^2.0.0-rc.2"
+    "type-graphql": "^2.0.0-rc.2",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",

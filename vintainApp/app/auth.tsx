@@ -1,4 +1,3 @@
-// vintainApp/app/auth.tsx
 import React, { useContext, useState } from "react";
 import {
   View,
@@ -17,11 +16,9 @@ export default function AuthScreen() {
 
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Common fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Sign-up fields
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
@@ -40,12 +37,7 @@ export default function AuthScreen() {
           username
         );
         Alert.alert("Success", `Account created for ${newAccount.email}`);
-        // Option 1: Switch back to sign-in
         setIsSignUp(false);
-
-        // Option 2: Or automatically sign them in if your backend returns a token:
-        // e.g. if the backend's makeAccount returns an accessToken, then do:
-        // await signIn(newAccount.accessToken, newAccount);
       } catch (err: any) {
         Alert.alert("Error", err.message || "Failed to create account");
       }
@@ -53,8 +45,7 @@ export default function AuthScreen() {
       try {
         const data = await apiSignIn(email, password);
         Alert.alert("Welcome", `Hello, ${data.name.first}!`);
-        // data has { id, name, accessToken }
-        await signIn(data.accessToken, data); // store in AuthContext
+        await signIn(data.accessToken, data);
       } catch (err: any) {
         Alert.alert("Error", err.message || "Failed to sign in");
       }
@@ -74,6 +65,7 @@ export default function AuthScreen() {
       <TextInput
         style={styles.input}
         placeholder="Email"
+        placeholderTextColor="#8d6e63"
         autoCapitalize="none"
         value={email}
         onChangeText={setEmail}
@@ -82,6 +74,7 @@ export default function AuthScreen() {
       <TextInput
         style={styles.input}
         placeholder="Password"
+        placeholderTextColor="#8d6e63"
         secureTextEntry
         value={password}
         autoCapitalize="none"
@@ -93,6 +86,7 @@ export default function AuthScreen() {
           <TextInput
             style={styles.input}
             placeholder="First Name"
+            placeholderTextColor="#8d6e63"
             value={firstName}
             autoCapitalize="none"
             onChangeText={setFirstName}
@@ -100,6 +94,7 @@ export default function AuthScreen() {
           <TextInput
             style={styles.input}
             placeholder="Last Name"
+            placeholderTextColor="#8d6e63"
             value={lastName}
             autoCapitalize="none"
             onChangeText={setLastName}
@@ -107,6 +102,7 @@ export default function AuthScreen() {
           <TextInput
             style={styles.input}
             placeholder="Username"
+            placeholderTextColor="#8d6e63"
             value={username}
             autoCapitalize="none"
             onChangeText={setUsername}
@@ -114,7 +110,7 @@ export default function AuthScreen() {
         </>
       )}
 
-      <Button title={isSignUp ? "Sign Up" : "Sign In"} onPress={handleSubmit} />
+      <Button title={isSignUp ? "Sign Up" : "Sign In"} onPress={handleSubmit} color="#8d6e63" />
 
       <TouchableOpacity onPress={toggleMode} style={styles.toggleBtn}>
         <Text style={styles.toggleText}>
@@ -131,26 +127,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff8e1',
     justifyContent: "center",
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 16,
     textAlign: "center",
+    fontFamily: 'SpaceMono',
+    color: '#3e2723',
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#8d6e63",
     marginBottom: 12,
-    padding: 8,
+    padding: 10,
+    borderRadius: 8,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+    backgroundColor: '#fff',
   },
   toggleBtn: {
     marginTop: 12,
     alignItems: "center",
   },
   toggleText: {
-    color: "#007AFF",
+    color: "#8d6e63",
     fontSize: 14,
     textDecorationLine: "underline",
+    fontFamily: 'SpaceMono',
   },
 });

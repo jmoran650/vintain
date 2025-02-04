@@ -6,21 +6,26 @@
 const tintColorLight = '#0a7ea4';
 const tintColorDark = '#fff';
 
+/**
+ * Vintage earth tone color palette.
+ */
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    text: "#3e2723",           // rich dark brown
+    background: "#fff8e1",     // light creamy tone
+    tint: "#8d6e63",           // soft taupe
+    icon: "#6d4c41",           // deep brown
+    tabIconDefault: "#6d4c41",
+    tabIconSelected: "#8d6e63",
+    border: "#d7ccc8",
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    text: "#d7ccc8",           // pale, light brownish grey
+    background: "#4e342e",     // dark chocolate brown
+    tint: "#bcaaa4",           // warm grey
+    icon: "#a1887f",
+    tabIconDefault: "#a1887f",
+    tabIconSelected: "#bcaaa4",
+    border: "#8d6e63",
   },
 };

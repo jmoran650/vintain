@@ -1,12 +1,11 @@
-// vintainApp/context/AuthContext.tsx
+// vintainApp/context/authContext.tsx
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import * as SecureStore from 'expo-secure-store';
+// Import setAuthToken and fetchMyProfile from your API service.
+import { setAuthToken, fetchMyProfile } from '../src/apiService';
+// Instead of a default import, import all of jwt-decode as a namespace
+import * as jwt_decode from 'jwt-decode';
 
-/**
- * The shape of auth state:
- *  - token: string | null
- *  - user: any (or a structured type with id, name, etc.)
- */
 type AuthContextType = {
   token: string | null;
   user: any | null;
@@ -15,7 +14,6 @@ type AuthContextType = {
   signOut: () => Promise<void>;
 };
 
-// Create the AuthContext
 export const AuthContext = createContext<AuthContextType>({
   token: null,
   user: null,
@@ -29,54 +27,53 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setTokenState] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  /**
-   * On app start, try to load existing token from SecureStore.
-   * If found, assume user is logged in (you might also want to verify or fetch user).
-   */
   useEffect(() => {
     (async () => {
       try {
+        // Attempt to load the saved token from SecureStore.
         const savedToken = await SecureStore.getItemAsync('token');
         if (savedToken) {
-          // If you also stored some user info, load that. 
-          // For now, we only store token, so user might be minimal:
-          setToken(savedToken);
-          // Optionally: fetch user from the server if you want fresh data
-          // setUser(...)
+          setTokenState(savedToken);
+          // Update our API service so all future requests include the token.
+          setAuthToken(savedToken);
+          // Decode the token to extract the user ID.
+          // With a namespace import, call the default export.
+          const decoded: { id: string } = jwt_decode.default(savedToken);
+          // Fetch the user profile using the decoded ID.
+          const profile = await fetchMyProfile(decoded.id);
+          setUser(profile);
         }
       } catch (err) {
-        console.error('Error loading token from SecureStore', err);
+        console.error('Error loading token or fetching profile:', err);
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  /**
-   * Called after successful sign-in or sign-up to store token in context + SecureStore.
-   */
   async function signIn(newToken: string, userData: any) {
     try {
       await SecureStore.setItemAsync('token', newToken);
-      setToken(newToken);
+      setTokenState(newToken);
       setUser(userData);
+      // Update our API service.
+      setAuthToken(newToken);
     } catch (err) {
       console.error('Error saving token to SecureStore', err);
     }
   }
 
-  /**
-   * Sign out and clear the token.
-   */
   async function signOut() {
     try {
       await SecureStore.deleteItemAsync('token');
-      setToken(null);
+      setTokenState(null);
       setUser(null);
+      // Clear token in our API service.
+      setAuthToken(null);
     } catch (err) {
       console.error('Error deleting token from SecureStore', err);
     }

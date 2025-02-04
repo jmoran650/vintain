@@ -3,17 +3,22 @@
 import { Authorized, Query, Resolver, Ctx, Mutation, Arg } from "type-graphql";
 import { Request } from "express";
 import { MessageService } from "./service";
-import { Message, NewMessage, UUID } from "./schema";
+import { Message, NewMessage } from "./schema";
+import { UUID } from "../../common/types";
+import { Service } from "typedi";
 
+@Service()
 @Resolver()
 export class MessageResolver {
+  constructor(private readonly messageService: MessageService) {}
+
   @Authorized()
   @Query(() => Message)
   async message(
     @Ctx() _req: Request,
     @Arg("input") id: UUID
   ): Promise<Message> {
-    return new MessageService().getMessage(id);
+    return this.messageService.getMessage(id);
   }
 
   @Authorized()
@@ -22,7 +27,7 @@ export class MessageResolver {
     @Ctx() _req: Request,
     @Arg("input") itemOwnerId: UUID
   ): Promise<Message[]> {
-    return new MessageService().getMessagesByItemOwner(itemOwnerId);
+    return this.messageService.getMessagesByItemOwner(itemOwnerId);
   }
 
   @Authorized()
@@ -31,7 +36,7 @@ export class MessageResolver {
     @Ctx() _req: Request,
     @Arg("input") senderId: UUID
   ): Promise<Message[]> {
-    return new MessageService().getMessagesBySender(senderId);
+    return this.messageService.getMessagesBySender(senderId);
   }
 
   @Authorized()
@@ -40,7 +45,7 @@ export class MessageResolver {
     @Arg("input") messageInfo: NewMessage,
     @Ctx() _req: Request
   ): Promise<Message> {
-    return new MessageService().createMessage(messageInfo);
+    return this.messageService.createMessage(messageInfo);
   }
 
   @Authorized()
@@ -49,6 +54,6 @@ export class MessageResolver {
     @Arg("input") messageId: UUID,
     @Ctx() _req: Request
   ): Promise<boolean> {
-    return new MessageService().deleteMessage(messageId);
+    return this.messageService.deleteMessage(messageId);
   }
 }

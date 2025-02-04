@@ -1,19 +1,24 @@
 // src/account/graphql/resolver.ts
-
 import { Authorized, Query, Resolver, Ctx, Mutation, Arg } from "type-graphql";
 import { Request } from "express";
 import { AccountService } from "./service";
-import { Account, Email, NewAccount, UUID } from "./schema";
+import { Account, NewAccount } from "./schema";
+import { UUID, Email } from "../../common/types";
+import { Service } from "typedi";
+import { Public } from "../../common/decorators";
 
+@Service()
 @Resolver()
 export class AccountResolver {
+  constructor(private readonly accountService: AccountService) {}
+
   @Authorized()
   @Query(() => Account)
   async account(
     @Ctx() _req: Request,
-    @Arg("input") ID: UUID
+    @Arg("input") id: UUID
   ): Promise<Account> {
-    return new AccountService().getAccount(ID);
+    return this.accountService.getAccount(id);
   }
 
   @Authorized()
@@ -22,31 +27,31 @@ export class AccountResolver {
     @Ctx() _req: Request,
     @Arg("input") email: Email
   ): Promise<Account> {
-    email = email.toLowerCase();
-    return new AccountService().getAccountByEmail(email);
+    return this.accountService.getAccountByEmail(email.toLowerCase());
   }
 
   @Authorized()
   @Query(() => [Account])
   async allAccounts(@Ctx() _req: Request): Promise<Account[]> {
-    return new AccountService().getAllAccounts();
+    return this.accountService.getAllAccounts();
   }
 
   @Authorized()
   @Query(() => [Account])
   async restrictedVendors(@Ctx() _req: Request): Promise<Account[]> {
-    const all = await new AccountService().getAllAccounts();
-    return all.filter((acc) => acc.restricted === true && acc.roles.includes("Vendor"));
+    const all = await this.accountService.getAllAccounts();
+    return all.filter((acc) => acc.restricted && acc.roles.includes("Vendor"));
   }
 
-  // Public operation: account creation remains unprotected.
+  // Public operation: account creation is marked as public via decorator.
+  @Public()
   @Mutation(() => Account)
   async makeAccount(
     @Arg("input") newAccount: NewAccount,
     @Ctx() _request: Request
   ): Promise<Account> {
     newAccount.email = newAccount.email.toLowerCase();
-    return new AccountService().makeAccount(newAccount);
+    return this.accountService.makeAccount(newAccount);
   }
 
   @Authorized()
@@ -55,7 +60,7 @@ export class AccountResolver {
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    return new AccountService().deleteAccount(accountID);
+    return this.accountService.deleteAccount(accountID);
   }
 
   @Authorized()
@@ -64,8 +69,7 @@ export class AccountResolver {
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    accountEmail = accountEmail.toLowerCase();
-    return new AccountService().deleteAccountByEmail(accountEmail);
+    return this.accountService.deleteAccountByEmail(accountEmail.toLowerCase());
   }
 
   @Authorized()
@@ -74,7 +78,7 @@ export class AccountResolver {
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    return new AccountService().suspendAccount(accountID);
+    return this.accountService.suspendAccount(accountID);
   }
 
   @Authorized()
@@ -83,8 +87,7 @@ export class AccountResolver {
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    accountEmail = accountEmail.toLowerCase();
-    return new AccountService().suspendAccountByEmail(accountEmail);
+    return this.accountService.suspendAccountByEmail(accountEmail.toLowerCase());
   }
 
   @Authorized()
@@ -93,7 +96,7 @@ export class AccountResolver {
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    return new AccountService().resumeAccount(accountID);
+    return this.accountService.resumeAccount(accountID);
   }
 
   @Authorized()
@@ -102,8 +105,7 @@ export class AccountResolver {
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    accountEmail = accountEmail.toLowerCase();
-    return new AccountService().resumeAccountByEmail(accountEmail);
+    return this.accountService.resumeAccountByEmail(accountEmail.toLowerCase());
   }
 
   @Authorized()
@@ -113,6 +115,6 @@ export class AccountResolver {
     @Arg("username", { nullable: true }) username?: string,
     @Arg("bio", { nullable: true }) bio?: string
   ): Promise<boolean> {
-    return new AccountService().updateProfile(id, username, bio);
+    return this.accountService.updateProfile(id, username, bio);
   }
 }

@@ -1,32 +1,43 @@
-// vintainApp/src/services/apiService.ts
+// vintainApp/src/apiService.ts
 const BASE_URL = "http://localhost:4000/graphql";
-// If running Docker with port 4001, or on a real device, adjust accordingly
+
+// A module-level variable to store the token:
+let authToken: string | null = null;
+
+// A function to update the token (you can call this from your AuthContext when a user signs in)
+export function setAuthToken(token: string | null) {
+  authToken = token;
+}
 
 async function graphQLFetch(query: string, variables: any = {}) {
+  // Build headers, including Authorization if authToken exists.
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {})
+  };
+
   const res = await fetch(BASE_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ query, variables }),
   });
   const json = await res.json();
   if (json.errors) {
+    console.log(json.errors[0].message);
     throw new Error(json.errors[0].message || "GraphQL Error");
   }
   return json.data;
 }
 
 export async function signUp(
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    roles: string[],
-    username: string // new param
-  ) {
-
-    try{
-
-    
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string,
+  roles: string[],
+  username: string
+) {
+  try {
     const query = `
       mutation($input: NewAccount!) {
         makeAccount(input: $input) {
@@ -44,15 +55,14 @@ export async function signUp(
         lastName,
         roles,
         username,  // required
-        // we can omit bio if it's optional or add it if you want
       },
     };
     const data = await graphQLFetch(query, variables);
     return data.makeAccount;
-    } catch(error) {
-        console.log(error);
-    }
+  } catch (error) {
+    console.log(error);
   }
+}
 
 export async function signIn(email: string, password: string) {
   const query = `
@@ -112,22 +122,38 @@ export async function fetchListingById(id: string) {
 }
 
 export async function fetchMyProfile(id: string) {
-    const query = `
-      query($id: String!) {
-        account(input: $id) {
-          id
-          name {
-            first
-            last
-          }
-          profile {
-            username
-            bio
-          }
+  const query = `
+    query($id: String!) {
+      account(input: $id) {
+        id
+        name {
+          first
+          last
+        }
+        profile {
+          username
+          bio
         }
       }
+    }
+  `;
+  const variables = { id };
+  const data = await graphQLFetch(query, variables);
+  return data.account;
+}
+
+// vintainApp/src/apiService.ts
+export async function updateProfile(
+    id: string,
+    username?: string,
+    bio?: string
+  ) {
+    const query = `
+      mutation UpdateProfile($id: String!, $username: String, $bio: String) {
+        updateProfile(id: $id, username: $username, bio: $bio)
+      }
     `;
-    const variables = { id };
+    const variables = { id, username, bio };
     const data = await graphQLFetch(query, variables);
-    return data.account;
+    return data.updateProfile; // returns true/false
   }

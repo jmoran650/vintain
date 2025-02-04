@@ -1,4 +1,3 @@
-//vintainApp/app/+not-found.tsx
 import { Link, Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
@@ -26,6 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#fff8e1',
   },
   link: {
     marginTop: 15,

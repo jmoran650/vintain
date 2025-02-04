@@ -1,9 +1,11 @@
-// Backend/src/auth/graphql/service.ts
+// src/account/graphql/service.ts
 
+import { Service } from "typedi";
 import { pool } from "../../../db";
 import { NewAccount, Account } from "./schema";
-import { UUID, Email } from "./schema";
+import { UUID, Email } from "../../common/types";
 
+@Service()
 export class AccountService {
   public async getAccount(id: UUID): Promise<Account> {
     const select = `
@@ -17,24 +19,21 @@ export class AccountService {
       FROM account
       WHERE id = $1
     `;
-    const query = { text: select, values: [id] };
-    const { rows } = await pool.query(query);
+    const { rows } = await pool.query(select, [id]);
 
     if (rows.length === 0) {
       throw new Error("Account with given ID does not exist.");
     }
 
     const row = rows[0];
-    // row.profile might be null or {username, bio} or partial
     return {
       id: row.id,
       email: row.email,
       restricted: row.restricted,
-      name: row.name,         // { first, last }
+      name: row.name,
       roles: row.roles || [],
-      // Always return a Profile object:
       profile: {
-        username: row.profile?.username ?? "", // fallback to empty string
+        username: row.profile?.username ?? "",
         bio: row.profile?.bio ?? null,
       },
     };
@@ -52,10 +51,9 @@ export class AccountService {
       FROM account
       WHERE email = $1
     `;
-    const query = { text: select, values: [email] };
-    const { rows } = await pool.query(query);
+    const { rows } = await pool.query(select, [email]);
 
-    if (rows.length == 0) {
+    if (rows.length === 0) {
       throw new Error("Account with given Email does not exist.");
     }
 
@@ -100,9 +98,9 @@ export class AccountService {
   }
 
   public async makeAccount(info: NewAccount): Promise<Account> {
-    const restrictedVal = info.roles.includes("Vendor") || info.roles.includes("vendor");
+    const restrictedVal = info.roles.some(role => role.toLowerCase() === "vendor");
 
-    // Insert includes 'profile' with 'username' and optional 'bio'
+    // Explicitly cast parameters so that PostgreSQL can infer types.
     const insert = `
       INSERT INTO account (email, restricted, data)
       VALUES (
@@ -123,22 +121,18 @@ export class AccountService {
       )
       RETURNING id
     `;
-    const query = {
-      text: insert,
-      values: [
-        info.email,        // $1
-        info.firstName,    // $2
-        info.lastName,     // $3
-        info.password,     // $4
-        info.roles,        // $5
-        info.username,     // $6
-        restrictedVal,     // $7
-        info.bio || null,  // $8
-      ],
-    };
-    const { rows } = await pool.query(query);
+    const values = [
+      info.email,
+      info.firstName,
+      info.lastName,
+      info.password,
+      info.roles,
+      info.username,
+      restrictedVal,
+      info.bio || null,
+    ];
+    const { rows } = await pool.query(insert, values);
 
-    // Return the newly created account data
     return {
       id: rows[0].id,
       email: info.email,
@@ -153,20 +147,20 @@ export class AccountService {
   }
 
   public async deleteAccount(id: UUID): Promise<boolean> {
-    const del = `DELETE FROM account WHERE (id=$1)`;
-    await pool.query({ text: del, values: [id] });
+    const del = `DELETE FROM account WHERE id = $1`;
+    await pool.query(del, [id]);
     return true;
   }
 
   public async deleteAccountByEmail(email: string): Promise<boolean> {
-    const del = `DELETE FROM account WHERE (email=$1)`;
-    await pool.query({ text: del, values: [email] });
+    const del = `DELETE FROM account WHERE email = $1`;
+    await pool.query(del, [email]);
     return true;
   }
 
   private async modifyRestricted(byWhat: "id" | "email", setTo: boolean, byValue: UUID | Email) {
-    const update = `UPDATE account SET restricted = $2 WHERE (${byWhat}=$1)`;
-    await pool.query({ text: update, values: [byValue, setTo] });
+    const update = `UPDATE account SET restricted = $2 WHERE ${byWhat} = $1`;
+    await pool.query(update, [byValue, setTo]);
     return true;
   }
 
@@ -191,45 +185,36 @@ export class AccountService {
     username?: string,
     bio?: string
   ): Promise<boolean> {
-    // 1) fetch existing profile subobject from DB
     const select = `
       SELECT data->'profile' as profile
       FROM account
       WHERE id = $1
     `;
-    const { rows } = await pool.query({ text: select, values: [id] });
+    const { rows } = await pool.query(select, [id]);
 
     if (rows.length === 0) {
       throw new Error("No account found for that ID.");
     }
 
-    // oldProfile is either null or { username, bio }
     const oldProfile = rows[0].profile || {};
-
-    // 2) Merge old data with new
     const newProfile = {
       ...oldProfile,
       ...(username !== undefined ? { username } : {}),
       ...(bio !== undefined ? { bio } : {}),
     };
 
-    // 3) Update the row in DB
     const updateSql = `
       UPDATE account
       SET data = jsonb_set(
         data,
         '{profile}',
-        $2::jsonb,  -- the new profile object
+        $2::jsonb,
         true
       )
       WHERE id = $1
     `;
-    await pool.query({
-      text: updateSql,
-      values: [id, JSON.stringify(newProfile)],
-    });
+    await pool.query(updateSql, [id, JSON.stringify(newProfile)]);
 
     return true;
   }
-
 }

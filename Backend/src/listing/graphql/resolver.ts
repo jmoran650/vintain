@@ -3,17 +3,22 @@
 import { Authorized, Query, Resolver, Mutation, Arg, Int, Ctx } from "type-graphql";
 import { Request } from "express";
 import { ListingService } from "./service";
-import { Listing, NewListing, UUID, PaginatedListings } from "./schema";
+import { Listing, NewListing, PaginatedListings } from "./schema";
+import { UUID } from "../../common/types";
+import { Service } from "typedi";
 
+@Service()
 @Resolver()
 export class ListingResolver {
+  constructor(private readonly listingService: ListingService) {}
+
   @Authorized()
   @Query(() => Listing)
   async listing(
     @Ctx() _req: Request,
     @Arg("id") id: UUID
   ): Promise<Listing> {
-    return new ListingService().getListing(id);
+    return this.listingService.getListing(id);
   }
 
   @Authorized()
@@ -23,7 +28,7 @@ export class ListingResolver {
     @Arg("page", () => Int, { defaultValue: 1 }) page: number,
     @Arg("pageSize", () => Int, { defaultValue: 10 }) pageSize: number
   ): Promise<PaginatedListings> {
-    return new ListingService().getAllListings(page, pageSize);
+    return this.listingService.getAllListings(page, pageSize);
   }
 
   @Authorized()
@@ -32,7 +37,7 @@ export class ListingResolver {
     @Arg("input") listingInfo: NewListing,
     @Ctx() _req: Request
   ): Promise<Listing> {
-    return new ListingService().createListing(listingInfo);
+    return this.listingService.createListing(listingInfo);
   }
 
   @Authorized()
@@ -41,7 +46,7 @@ export class ListingResolver {
     @Arg("id") listingId: UUID,
     @Ctx() _req: Request
   ): Promise<boolean> {
-    return new ListingService().deleteListing(listingId);
+    return this.listingService.deleteListing(listingId);
   }
 
   @Authorized()
@@ -51,7 +56,7 @@ export class ListingResolver {
     @Arg("page", () => Int, { defaultValue: 1 }) page: number,
     @Arg("pageSize", () => Int, { defaultValue: 10 }) pageSize: number
   ): Promise<PaginatedListings> {
-    const { listings, totalCount } = await new ListingService().searchListings(
+    const { listings, totalCount } = await this.listingService.searchListings(
       searchTerm,
       page,
       pageSize

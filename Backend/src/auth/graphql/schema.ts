@@ -1,25 +1,7 @@
 //Backend/src/auth/graphql/schema.ts
 import { ObjectType, InputType, Field } from "type-graphql";
-import {Request} from "express";
 import {MinLength} from 'class-validator';
-import {Name} from '../../account/graphql/schema'
-/**
- * From https://tsoa-community.github.io/docs/examples.html
- * Stringified UUIDv4.
- * See [RFC 4112](https://tools.ietf.org/html/rfc4122)
- * @pattern [0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}
- * @format uuid
- */
-export type UUID = string;
-
-/**
- * From https://tsoa-community.github.io/docs/examples.html
- * Stringified UUIDv4.
- * See [RFC 4112](https://tools.ietf.org/html/rfc4122)
- * @pattern ^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$
- * @format email
- */
-export type Email = string;
+import {UUID, Email, Name } from '../../common/types'
 
 
 

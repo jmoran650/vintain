@@ -1,4 +1,3 @@
-// vintainApp/app/listingDetail.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocalSearchParams } from "expo-router";
 import {
@@ -7,7 +6,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  SafeAreaView, // import SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import { fetchListingById } from '../src/apiService';
 
@@ -33,7 +32,7 @@ export default function ListingDetail() {
   if (!listing) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Loading listing details...</Text>
+        <Text style={styles.loadingText}>Loading listing details...</Text>
       </SafeAreaView>
     );
   }
@@ -55,14 +54,42 @@ export default function ListingDetail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    // No need for big top padding if using SafeAreaView
+    backgroundColor: '#fff8e1',
   },
   scrollContent: {
-    padding: 16, // This ensures spacing inside the scroll content
+    padding: 16,
   },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  subtitle: { fontSize: 14, marginBottom: 8, color: '#666' },
-  description: { fontSize: 16, marginBottom: 12 },
-  image: { width: '100%', height: 200, resizeMode: 'cover', marginBottom: 12 },
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold', 
+    marginBottom: 8,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+  },
+  subtitle: { 
+    fontSize: 14, 
+    marginBottom: 8, 
+    color: '#5d4037',
+    fontFamily: 'SpaceMono',
+  },
+  description: { 
+    fontSize: 16, 
+    marginBottom: 12,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+  },
+  image: { 
+    width: '100%', 
+    height: 200, 
+    resizeMode: 'cover', 
+    marginBottom: 12,
+    borderRadius: 8,
+  },
+  loadingText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#3e2723',
+    fontFamily: 'SpaceMono',
+  },
 });

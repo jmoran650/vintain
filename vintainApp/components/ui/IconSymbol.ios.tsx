@@ -21,10 +21,7 @@ export function IconSymbol({
       resizeMode="scaleAspectFit"
       name={name}
       style={[
-        {
-          width: size,
-          height: size,
-        },
+        { width: size, height: size },
         style,
       ]}
     />

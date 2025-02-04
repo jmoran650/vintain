@@ -16,6 +16,7 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "reflect-metadata": "^0.2.2",
+    "repomix": "^0.2.24",
     "supertest": "^7.0.0"
   }
 }
