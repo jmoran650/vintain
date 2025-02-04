@@ -15,19 +15,44 @@ async function graphQLFetch(query: string, variables: any = {}) {
   return json.data;
 }
 
-export async function signUp(email: string, password: string, firstName: string, lastName: string, roles: string[]) {
-  const query = `
-    mutation($input: NewAccount!) {
-      makeAccount(input: $input) {
-        id
-        email
+export async function signUp(
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    roles: string[],
+    username: string // new param
+  ) {
+
+    try{
+
+    
+    const query = `
+      mutation($input: NewAccount!) {
+        makeAccount(input: $input) {
+          id
+          email
+        }
       }
+    `;
+    // Pass username in as well
+    const variables = {
+      input: {
+        email,
+        password,
+        firstName,
+        lastName,
+        roles,
+        username,  // required
+        // we can omit bio if it's optional or add it if you want
+      },
+    };
+    const data = await graphQLFetch(query, variables);
+    return data.makeAccount;
+    } catch(error) {
+        console.log(error);
     }
-  `;
-  const variables = { input: { email, password, firstName, lastName, roles } };
-  const data = await graphQLFetch(query, variables);
-  return data.makeAccount;
-}
+  }
 
 export async function signIn(email: string, password: string) {
   const query = `
@@ -85,3 +110,24 @@ export async function fetchListingById(id: string) {
   const data = await graphQLFetch(query, { id });
   return data.listing;
 }
+
+export async function fetchMyProfile(id: string) {
+    const query = `
+      query($id: String!) {
+        account(input: $id) {
+          id
+          name {
+            first
+            last
+          }
+          profile {
+            username
+            bio
+          }
+        }
+      }
+    `;
+    const variables = { id };
+    const data = await graphQLFetch(query, variables);
+    return data.account;
+  }

@@ -4,17 +4,15 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "tsc && node dist/index.js",
     "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message",
     "test:auth": "jest --config jest.config.js --testPathPattern='src/auth/test/' --runInBand",
     "test:account": "jest --config jest.config.js --testPathPattern='src/account/test/' --runInBand",
     "test:listing": "jest --config jest.config.js --testPathPattern='src/listing/test/' --runInBand",
     "test:message": "jest --config jest.config.js --testPathPattern='src/message/test/' --runInBand",
     "test:orders": "jest --config jest.config.js --testPathPattern='src/orders/test/' --runInBand"
-    
   },
   "keywords": [],
   "author": "",
@@ -26,6 +24,7 @@
     "graphql": "^16.10.0",
     "graphql-http": "^1.22.3",
     "graphql-request": "^7.1.2",
+    "helmet": "^8.0.0",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.1",

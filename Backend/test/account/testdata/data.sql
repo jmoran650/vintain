@@ -7,6 +7,7 @@ VALUES
     jsonb_build_object(
       'password', crypt('password', 'hello'),
       'name', jsonb_build_object('first','John','last','Doe'),
+      'username': 'deez'
       'roles', jsonb_build_array('admin')
     ),
     false

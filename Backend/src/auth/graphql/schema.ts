@@ -2,7 +2,7 @@
 import { ObjectType, InputType, Field } from "type-graphql";
 import {Request} from "express";
 import {MinLength} from 'class-validator';
-
+import {Name} from '../../account/graphql/schema'
 /**
  * From https://tsoa-community.github.io/docs/examples.html
  * Stringified UUIDv4.
@@ -21,16 +21,7 @@ export type UUID = string;
  */
 export type Email = string;
 
-@ObjectType()
-export class Name {
-  @Field()
-  @MinLength(1)
-  first!:string
 
-  @Field()
-  @MinLength(1)
-  last!:string
-}
 
 @InputType()
 @ObjectType()

@@ -1,22 +1,22 @@
-//Backend/src/listing/graphql/resolver.ts
-import { Query, Resolver, Mutation, Arg, Int, Ctx } from "type-graphql";
+// src/listing/graphql/resolver.ts
+
+import { Authorized, Query, Resolver, Mutation, Arg, Int, Ctx } from "type-graphql";
 import { Request } from "express";
 import { ListingService } from "./service";
 import { Listing, NewListing, UUID, PaginatedListings } from "./schema";
 
 @Resolver()
 export class ListingResolver {
-  /**
-   * Get a single listing by ID.
-   */
+  @Authorized()
   @Query(() => Listing)
-  async listing(@Ctx() _req: Request, @Arg("id") id: UUID): Promise<Listing> {
+  async listing(
+    @Ctx() _req: Request,
+    @Arg("id") id: UUID
+  ): Promise<Listing> {
     return new ListingService().getListing(id);
   }
 
-  /**
-   * Get paginated listings.
-   */
+  @Authorized()
   @Query(() => PaginatedListings)
   async allListings(
     @Ctx() _req: Request,
@@ -26,9 +26,7 @@ export class ListingResolver {
     return new ListingService().getAllListings(page, pageSize);
   }
 
-  /**
-   * Create a new listing.
-   */
+  @Authorized()
   @Mutation(() => Listing)
   async createListing(
     @Arg("input") listingInfo: NewListing,
@@ -37,9 +35,7 @@ export class ListingResolver {
     return new ListingService().createListing(listingInfo);
   }
 
-  /**
-   * Delete a listing by ID.
-   */
+  @Authorized()
   @Mutation(() => Boolean)
   async deleteListing(
     @Arg("id") listingId: UUID,
@@ -48,6 +44,7 @@ export class ListingResolver {
     return new ListingService().deleteListing(listingId);
   }
 
+  @Authorized()
   @Query(() => PaginatedListings)
   async searchListings(
     @Arg("searchTerm") searchTerm: string,

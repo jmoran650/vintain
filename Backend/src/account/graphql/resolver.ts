@@ -1,140 +1,112 @@
-//Backend/src/auth/graphql/service.ts
-import { Authorized, Query, Resolver, Ctx, Mutation, Arg } from "type-graphql";
+// src/account/graphql/resolver.ts
 
+import { Authorized, Query, Resolver, Ctx, Mutation, Arg } from "type-graphql";
 import { Request } from "express";
 import { AccountService } from "./service";
 import { Account, Email, NewAccount, UUID } from "./schema";
-// import {ExampleResponse} from './schema';
 
 @Resolver()
 export class AccountResolver {
-  // @Authorized('someRole') Put role authorizations right here
-  @Query((_returns) => Account)
+  @Authorized()
+  @Query(() => Account)
   async account(
     @Ctx() _req: Request,
     @Arg("input") ID: UUID
   ): Promise<Account> {
-    //console.log('Getting Account');
-    const result = await new AccountService().getAccount(ID);
-    return result;
+    return new AccountService().getAccount(ID);
   }
 
-  @Query((_returns) => Account)
+  @Authorized()
+  @Query(() => Account)
   async accountByEmail(
     @Ctx() _req: Request,
     @Arg("input") email: Email
   ): Promise<Account> {
     email = email.toLowerCase();
-    const result = await new AccountService().getAccountByEmail(email);
-    return result;
+    return new AccountService().getAccountByEmail(email);
   }
 
-  @Query((_returns) => [Account])
+  @Authorized()
+  @Query(() => [Account])
   async allAccounts(@Ctx() _req: Request): Promise<Account[]> {
-    const result = await new AccountService().getAllAccounts();
-    //console.log('All accounts returning:', result);
-    return result;
+    return new AccountService().getAllAccounts();
   }
 
-  @Query((_returns) => [Account])
+  @Authorized()
+  @Query(() => [Account])
   async restrictedVendors(@Ctx() _req: Request): Promise<Account[]> {
-    let result = await new AccountService().getAllAccounts();
-
-    // Filter all accounts to only include restricted accounts with vendor roles
-    result = result.filter((acc) => {
-      return acc.restricted == true && acc.roles.includes("Vendor");
-    });
-    //console.log('Restricted:', result);
-    return result;
+    const all = await new AccountService().getAllAccounts();
+    return all.filter((acc) => acc.restricted === true && acc.roles.includes("Vendor"));
   }
 
-  //@Authorized('someRole')
-  @Mutation((_returns) => Account)
+  // Public operation: account creation remains unprotected.
+  @Mutation(() => Account)
   async makeAccount(
-    @Arg("input") NewAccount: NewAccount,
+    @Arg("input") newAccount: NewAccount,
     @Ctx() _request: Request
   ): Promise<Account> {
-    NewAccount.email = NewAccount.email.toLowerCase();
-    //console.log('Making New Account:', NewAccount.firstName);
-    const result = await new AccountService().makeAccount(NewAccount);
-    return result;
+    newAccount.email = newAccount.email.toLowerCase();
+    return new AccountService().makeAccount(newAccount);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async deleteAccount(
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    //console.log('Deleting account', accountID);
-    const result = await new AccountService().deleteAccount(accountID);
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().deleteAccount(accountID);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async deleteAccountByEmail(
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    //console.log('Deleting account', accountEmail);
-    const result = await new AccountService().deleteAccountByEmail(
-      accountEmail
-    );
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().deleteAccountByEmail(accountEmail);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async suspendAccount(
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    //console.log('Suspending account', accountID);
-    const result = await new AccountService().suspendAccount(accountID);
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().suspendAccount(accountID);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async suspendAccountByEmail(
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    //console.log('Suspending account', accountEmail);
-    const result = await new AccountService().suspendAccountByEmail(
-      accountEmail
-    );
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().suspendAccountByEmail(accountEmail);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async resumeAccount(
     @Arg("input") accountID: UUID,
     @Ctx() _request: Request
   ): Promise<boolean> {
-    //console.log('Suspending account', accountID);
-    const result = await new AccountService().resumeAccount(accountID);
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().resumeAccount(accountID);
   }
 
-  @Mutation((_returns) => Boolean)
+  @Authorized()
+  @Mutation(() => Boolean)
   async resumeAccountByEmail(
     @Arg("input") accountEmail: Email,
     @Ctx() _request: Request
   ): Promise<boolean> {
     accountEmail = accountEmail.toLowerCase();
-    //console.log('Suspending account', accountEmail);
-    const result = await new AccountService().resumeAccountByEmail(
-      accountEmail
-    );
-    //console.log('Success?:', result);
-    return result;
+    return new AccountService().resumeAccountByEmail(accountEmail);
   }
 
+  @Authorized()
   @Mutation(() => Boolean)
   async updateProfile(
     @Arg("id") id: UUID,
