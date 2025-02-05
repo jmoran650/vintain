@@ -1,21 +1,25 @@
 // vintainApp/app/editProfile.tsx
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import {
+  SafeAreaView,
+  KeyboardAvoidingView,
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  StyleSheet,
+  Platform,
+} from 'react-native';
+import { useRouter } from 'expo-router';
 import { updateProfile } from '../src/apiService';
 import { AuthContext } from '../context/authContext';
 
 export default function EditProfileScreen() {
-  // Option 1: Get the current user ID from context
   const { user } = useContext(AuthContext);
-  // Option 2: You might also pass the ID as a route parameter:
-  // const { id } = useLocalSearchParams<{ id: string }>();
-
-  // We'll use the user ID from context here.
   const userId = user?.id;
   const router = useRouter();
 
-  // Local state for the form fields:
   const [username, setUsername] = useState(user?.profile?.username || '');
   const [bio, setBio] = useState(user?.profile?.bio || '');
 
@@ -28,7 +32,6 @@ export default function EditProfileScreen() {
       const success = await updateProfile(userId, username, bio);
       if (success) {
         Alert.alert("Success", "Profile updated successfully!");
-        // Optionally, navigate back or refresh your profile:
         router.back();
       } else {
         Alert.alert("Error", "Profile update failed.");
@@ -39,27 +42,33 @@ export default function EditProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Edit Profile</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={[styles.input, styles.multiline]}
-        placeholder="Bio"
-        value={bio}
-        onChangeText={setBio}
-        multiline
-      />
-      <Button title="Save Changes" onPress={handleSubmit} />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <Text style={styles.header}>Edit Profile</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={[styles.input, styles.multiline]}
+          placeholder="Bio"
+          value={bio}
+          onChangeText={setBio}
+          multiline
+        />
+        <Button title="Save Changes" onPress={handleSubmit} />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#fff8e1' },
   container: { flex: 1, padding: 16, justifyContent: 'center' },
   header: { fontSize: 24, marginBottom: 16, textAlign: 'center' },
   input: {

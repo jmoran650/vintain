@@ -1,3 +1,4 @@
+// app/_layout.tsx
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -8,6 +9,14 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthProvider, AuthContext } from '../context/authContext';
 import AuthScreen from './auth';
+
+// *** Import our React Query setup to enable online and focus management ***
+import '../src/reactQuerySetup';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Create a React Query client
+const queryClient = new QueryClient();
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,10 +38,12 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AuthOrStack />
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <AuthOrStack />
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </QueryClientProvider>
     </AuthProvider>
   );
 }

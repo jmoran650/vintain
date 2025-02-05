@@ -1,5 +1,8 @@
+// vintainApp/app/auth.tsx
 import React, { useContext, useState } from "react";
 import {
+  SafeAreaView,
+  KeyboardAvoidingView,
   View,
   Text,
   TextInput,
@@ -7,6 +10,7 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import { AuthContext } from "../context/authContext";
 import { signIn as apiSignIn, signUp as apiSignUp } from "../src/apiService";
@@ -57,73 +61,79 @@ export default function AuthScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>
-        {isSignUp ? "Create Account" : "Sign In"}
-      </Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#8d6e63"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#8d6e63"
-        secureTextEntry
-        value={password}
-        autoCapitalize="none"
-        onChangeText={setPassword}
-      />
-
-      {isSignUp && (
-        <>
-          <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            placeholderTextColor="#8d6e63"
-            value={firstName}
-            autoCapitalize="none"
-            onChangeText={setFirstName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            placeholderTextColor="#8d6e63"
-            value={lastName}
-            autoCapitalize="none"
-            onChangeText={setLastName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            placeholderTextColor="#8d6e63"
-            value={username}
-            autoCapitalize="none"
-            onChangeText={setUsername}
-          />
-        </>
-      )}
-
-      <Button title={isSignUp ? "Sign Up" : "Sign In"} onPress={handleSubmit} color="#8d6e63" />
-
-      <TouchableOpacity onPress={toggleMode} style={styles.toggleBtn}>
-        <Text style={styles.toggleText}>
-          {isSignUp
-            ? "Already have an account? Sign in"
-            : "Don't have an account? Sign up"}
+    <SafeAreaView style={styles.safeArea}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <Text style={styles.header}>
+          {isSignUp ? "Create Account" : "Sign In"}
         </Text>
-      </TouchableOpacity>
-    </View>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#8d6e63"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#8d6e63"
+          secureTextEntry
+          value={password}
+          autoCapitalize="none"
+          onChangeText={setPassword}
+        />
+
+        {isSignUp && (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="First Name"
+              placeholderTextColor="#8d6e63"
+              value={firstName}
+              autoCapitalize="none"
+              onChangeText={setFirstName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Last Name"
+              placeholderTextColor="#8d6e63"
+              value={lastName}
+              autoCapitalize="none"
+              onChangeText={setLastName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              placeholderTextColor="#8d6e63"
+              value={username}
+              autoCapitalize="none"
+              onChangeText={setUsername}
+            />
+          </>
+        )}
+
+        <Button title={isSignUp ? "Sign Up" : "Sign In"} onPress={handleSubmit} color="#8d6e63" />
+
+        <TouchableOpacity onPress={toggleMode} style={styles.toggleBtn}>
+          <Text style={styles.toggleText}>
+            {isSignUp
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Sign up"}
+          </Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: '#fff8e1' },
   container: {
     flex: 1,
     padding: 16,

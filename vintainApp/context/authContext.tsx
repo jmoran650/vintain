@@ -3,8 +3,8 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import * as SecureStore from 'expo-secure-store';
 // Import setAuthToken and fetchMyProfile from your API service.
 import { setAuthToken, fetchMyProfile } from '../src/apiService';
-// Instead of a default import, import all of jwt-decode as a namespace
-import * as jwt_decode from 'jwt-decode';
+// Import jwt-decode as a default import
+import { jwtDecode } from "jwt-decode";
 
 type AuthContextType = {
   token: string | null;
@@ -41,8 +41,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // Update our API service so all future requests include the token.
           setAuthToken(savedToken);
           // Decode the token to extract the user ID.
-          // With a namespace import, call the default export.
-          const decoded: { id: string } = jwt_decode.default(savedToken);
+          const decoded: { id: string } = jwtDecode(savedToken);
           // Fetch the user profile using the decoded ID.
           const profile = await fetchMyProfile(decoded.id);
           setUser(profile);

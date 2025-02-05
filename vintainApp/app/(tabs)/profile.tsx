@@ -1,9 +1,15 @@
-// app/(tabs)/profile.tsx
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Button } from 'react-native';
-import { AuthContext } from '../../context/authContext';
-import { fetchMyProfile } from '../../src/apiService';
-import { useRouter } from 'expo-router';
+// vintainApp/app/(tabs)/profile.tsx
+import React, { useContext, useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Button,
+} from "react-native";
+import { AuthContext } from "../../context/authContext";
+import { fetchMyProfile } from "../../src/apiService";
+import { useRouter } from "expo-router";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -28,7 +34,7 @@ export default function ProfileScreen() {
       const data = await fetchMyProfile(id);
       setProfile(data);
     } catch (err) {
-      console.error('Failed to fetch profile:', err);
+      console.error("Failed to fetch profile:", err);
     } finally {
       setLoading(false);
     }
@@ -36,22 +42,20 @@ export default function ProfileScreen() {
 
   function handleSignOut() {
     signOut().catch((err) => {
-      console.error('Failed to sign out', err);
+      console.error("Failed to sign out", err);
     });
   }
 
   if (loading) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <ActivityIndicator color="#8d6e63" />
-      </View>
+      </SafeAreaView>
     );
   }
 
-  // Instead of returning early when no profile is found, we render a screen that
-  // tells the user no profile was found *and* lets them create one.
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {profile ? (
         <>
           <Text style={styles.title}>
@@ -59,7 +63,9 @@ export default function ProfileScreen() {
           </Text>
           <Text style={styles.subtitle}>@{profile.profile.username}</Text>
           <Text style={styles.bio}>
-            {profile.profile.bio || 'No bio available.'}
+            {profile.profile.bio != null
+              ? profile.profile.bio
+              : "No bio available."}
           </Text>
         </>
       ) : (
@@ -69,18 +75,18 @@ export default function ProfileScreen() {
       )}
       <Button
         title="Edit Profile"
-        onPress={() => router.push('/editProfile')}
+        onPress={() => router.push("/editProfile")}
         color="#8d6e63"
       />
       <Button title="Sign Out" onPress={handleSignOut} color="#8d6e63" />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff8e1', justifyContent: 'center', alignItems: 'center' },
-  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 8, color: '#3e2723', fontFamily: 'SpaceMono' },
-  subtitle: { fontSize: 20, color: '#5d4037', marginBottom: 12, fontFamily: 'SpaceMono' },
-  bio: { fontSize: 16, marginBottom: 16, color: '#3e2723', fontFamily: 'SpaceMono', textAlign: 'center' },
-  message: { fontSize: 16, marginBottom: 16, color: '#3e2723', fontFamily: 'SpaceMono' },
+  container: { flex: 1, padding: 16, backgroundColor: "#fff8e1", justifyContent: "center", alignItems: "center" },
+  title: { fontSize: 28, fontWeight: "bold", marginBottom: 8, color: "#3e2723", fontFamily: 'SpaceMono' },
+  subtitle: { fontSize: 20, color: "#5d4037", marginBottom: 12, fontFamily: 'SpaceMono' },
+  bio: { fontSize: 16, marginBottom: 16, color: "#3e2723", fontFamily: 'SpaceMono', textAlign: "center" },
+  message: { fontSize: 16, marginBottom: 16, color: "#3e2723", fontFamily: 'SpaceMono' },
 });

@@ -65,8 +65,9 @@ export async function signUp(
 }
 
 export async function signIn(email: string, password: string) {
+  // Use a mutation for the login operation
   const query = `
-    query($creds: Credentials!) {
+    mutation($creds: Credentials!) {
       login(input: $creds) {
         id
         name { first last }
@@ -142,18 +143,17 @@ export async function fetchMyProfile(id: string) {
   return data.account;
 }
 
-// vintainApp/src/apiService.ts
 export async function updateProfile(
-    id: string,
-    username?: string,
-    bio?: string
-  ) {
-    const query = `
-      mutation UpdateProfile($id: String!, $username: String, $bio: String) {
-        updateProfile(id: $id, username: $username, bio: $bio)
-      }
-    `;
-    const variables = { id, username, bio };
-    const data = await graphQLFetch(query, variables);
-    return data.updateProfile; // returns true/false
-  }
+  id: string,
+  username?: string,
+  bio?: string
+) {
+  const query = `
+    mutation UpdateProfile($id: String!, $username: String, $bio: String) {
+      updateProfile(id: $id, username: $username, bio: $bio)
+    }
+  `;
+  const variables = { id, username, bio };
+  const data = await graphQLFetch(query, variables);
+  return data.updateProfile; // returns true/false
+}

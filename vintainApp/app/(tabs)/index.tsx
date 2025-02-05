@@ -1,6 +1,13 @@
+// vintainApp/app/(tabs)/index.tsx
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, Button, TextInput, FlatList, StyleSheet, TouchableOpacity,
+  SafeAreaView,
+  Text,
+  Button,
+  TextInput,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { fetchAllListings, searchListings } from '../../src/apiService';
@@ -85,16 +92,18 @@ export default function ListingListScreen() {
         <Text style={styles.listItemTitle}>
           {item.brand} - {item.name}
         </Text>
-        <Text numberOfLines={2} style={styles.listItemDescription}>{item.description}</Text>
+        <Text numberOfLines={2} style={styles.listItemDescription}>
+          {item.description}
+        </Text>
       </TouchableOpacity>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Vintage Listings</Text>
 
-      <View style={styles.searchRow}>
+      <SafeAreaView style={styles.searchRow}>
         <TextInput
           style={styles.searchInput}
           placeholder="Search brand/description..."
@@ -104,7 +113,7 @@ export default function ListingListScreen() {
         />
         <Button title="Search" onPress={onSearch} color="#8d6e63" />
         <Button title="Clear" onPress={onClearSearch} color="#a1887f" />
-      </View>
+      </SafeAreaView>
 
       <FlatList
         data={listings}
@@ -112,20 +121,30 @@ export default function ListingListScreen() {
         renderItem={renderItem}
       />
 
-      <View style={styles.paginationRow}>
+      <SafeAreaView style={styles.paginationRow}>
         <Button title="Prev" onPress={onPrevPage} disabled={page === 1} color="#8d6e63" />
         <Text style={styles.pageText}>Page {page}</Text>
         <Button title="Next" onPress={onNextPage} disabled={(page * pageSize) >= totalCount} color="#8d6e63" />
-      </View>
+      </SafeAreaView>
 
       <Text style={styles.totalText}>Total Listings: {totalCount}</Text>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff8e1' },
-  title: { fontSize: 26, textAlign: 'center', marginBottom: 16, fontFamily: 'SpaceMono', color: '#3e2723' },
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff8e1',
+  },
+  title: {
+    fontSize: 26,
+    textAlign: 'center',
+    marginBottom: 16,
+    fontFamily: 'SpaceMono',
+    color: '#3e2723',
+  },
   searchRow: {
     flexDirection: 'row',
     marginBottom: 12,
