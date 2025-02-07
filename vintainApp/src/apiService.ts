@@ -134,6 +134,7 @@ export async function fetchMyProfile(id: string) {
         profile {
           username
           bio
+          profilePicture
         }
       }
     }
@@ -146,14 +147,60 @@ export async function fetchMyProfile(id: string) {
 export async function updateProfile(
   id: string,
   username?: string,
-  bio?: string
+  bio?: string,
+  profilePicture?: string
 ) {
   const query = `
-    mutation UpdateProfile($id: String!, $username: String, $bio: String) {
-      updateProfile(id: $id, username: $username, bio: $bio)
+    mutation UpdateProfile($id: String!, $username: String, $bio: String, $profilePicture: String) {
+      updateProfile(id: $id, username: $username, bio: $bio, profilePicture: $profilePicture)
     }
   `;
-  const variables = { id, username, bio };
+  const variables = { id, username, bio, profilePicture };
   const data = await graphQLFetch(query, variables);
-  return data.updateProfile; // returns true/false
+  return data.updateProfile; // should return true/false
+}
+
+export async function createListing(
+  ownerId: string,
+  brand: string,
+  name: string,
+  description: string,
+  imageUrls: string[]
+) {
+  const query = `
+    mutation CreateListing($input: NewListing!) {
+      createListing(input: $input) {
+        id
+        ownerId
+        brand
+        name
+        description
+        imageUrls
+      }
+    }
+  `;
+  const variables = {
+    input: { ownerId, brand, name, description, imageUrls },
+  };
+  const data = await graphQLFetch(query, variables);
+  return data.createListing;
+}
+
+export async function generateUploadUrl(
+  fileName: string,
+  contentType: string,
+  folder: string
+) {
+  console.log("apiservicegenerateuploadurl: ", fileName, contentType, folder);
+  const query = `
+    mutation GenerateUploadUrl($fileName: String!, $contentType: String!, $folder: String!) {
+      generateUploadUrl(fileName: $fileName, contentType: $contentType, folder: $folder) {
+        preSignedUrl
+        fileUrl
+      }
+    }
+  `;
+  const variables = { fileName, contentType, folder };
+  const data = await graphQLFetch(query, variables);
+  return data.generateUploadUrl;
 }

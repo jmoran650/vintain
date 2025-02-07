@@ -108,13 +108,18 @@ export class AccountResolver {
     return this.accountService.resumeAccountByEmail(accountEmail.toLowerCase());
   }
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async updateProfile(
-    @Arg("id") id: UUID,
-    @Arg("username", { nullable: true }) username?: string,
-    @Arg("bio", { nullable: true }) bio?: string
-  ): Promise<boolean> {
-    return this.accountService.updateProfile(id, username, bio);
-  }
+// src/account/graphql/resolver.ts (partial change)
+
+@Authorized()
+@Mutation(() => Boolean)
+async updateProfile(
+  @Arg("id") id: UUID,
+  @Arg("username", { nullable: true }) username?: string,
+  @Arg("bio", { nullable: true }) bio?: string,
+  // New optional argument:
+  @Arg("profilePicture", { nullable: true }) profilePicture?: string
+): Promise<boolean> {
+  return this.accountService.updateProfile(id, username, bio, profilePicture);
+}
+
 }

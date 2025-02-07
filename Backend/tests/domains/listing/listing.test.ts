@@ -1,3 +1,4 @@
+// tests/domains/listing/listing.test.ts
 import * as http from "http";
 import supertest from "supertest";
 import { createApp } from "../../../index";
@@ -12,12 +13,12 @@ beforeAll(async () => {
   server = http.createServer(app);
   server.listen(0);
 
-  // Login to obtain a valid token for protected operations
+  // Use a mutation (not a query) to log in
   const loginResponse = await supertest(server)
     .post("/graphql")
     .send({
       query: `
-        query login {
+        mutation login {
           login(input: { email: "test@example.com", password: "password" }) {
             accessToken
           }

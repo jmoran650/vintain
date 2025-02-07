@@ -12,12 +12,12 @@ beforeAll(async () => {
   server = http.createServer(app);
   server.listen(0);
 
-  // Login to obtain a valid token for protected operations
+  // Use a mutation to log in (instead of a query)
   const loginResponse = await supertest(server)
     .post("/graphql")
     .send({
       query: `
-        query login {
+        mutation login {
           login(input: { email: "test@example.com", password: "password" }) {
             accessToken
           }

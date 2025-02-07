@@ -166,4 +166,21 @@ export class ListingService {
 
     return { listings, totalCount };
   }
+
+  // In src/listing/graphql/service.ts, add:
+  public async updateListingImages(id: UUID, imageUrls: string[]): Promise<boolean> {
+    const updateSql = `
+      UPDATE listing
+      SET data = jsonb_set(
+        data,
+        '{imageUrls}',
+        $2::jsonb,
+        true
+      )
+      WHERE id = $1
+    `;
+    await pool.query(updateSql, [id, JSON.stringify(imageUrls)]);
+    return true;
+  }
+
 }

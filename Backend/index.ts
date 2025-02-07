@@ -8,6 +8,10 @@ import "reflect-metadata";
 import { buildSchema, AuthChecker } from "type-graphql";
 import * as jwt from "jsonwebtoken";
 import { Container } from "typedi";
+
+// Import AWS SDK (v2 in this example)
+import AWS from "aws-sdk";
+
 dotenv.config();
 
 import { AccountResolver } from "./src/account/graphql/resolver";
@@ -15,11 +19,13 @@ import { AuthResolver } from "./src/auth/graphql/resolver";
 import { ListingResolver } from "./src/listing/graphql/resolver";
 import { MessageResolver } from "./src/message/graphql/resolver";
 import { OrderResolver } from "./src/orders/graphql/resolver";
+import { S3Resolver } from "./src/s3/graphql/resolver";
 
 // Use a single database pool instance
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
+
 
 /**
  * Global auth checker for TypeGraphQL.
@@ -47,10 +53,36 @@ const customAuthChecker: AuthChecker<any> = ({ context }, roles) => {
 
 async function createSchema() {
   return await buildSchema({
-    resolvers: [AuthResolver, AccountResolver, ListingResolver, MessageResolver, OrderResolver],
+    resolvers: [
+      AuthResolver,
+      AccountResolver,
+      ListingResolver,
+      MessageResolver,
+      OrderResolver,
+      S3Resolver,
+    ],
     authChecker: customAuthChecker,
     container: Container,
   });
+}
+
+/**
+ * Ping the S3 bucket by calling headBucket.
+ */
+async function pingS3(): Promise<void> {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    region: process.env.AWS_REGION!,
+  });
+  try {
+    // headBucket checks that the bucket exists and that the credentials are valid.
+    await s3.headBucket({ Bucket: process.env.AWS_S3_BUCKET! }).promise();
+    console.log("Successfully connected to S3 bucket:", process.env.AWS_S3_BUCKET);
+  } catch (error) {
+    console.error("Error connecting to S3 bucket:", error);
+    throw error;
+  }
 }
 
 export async function createApp() {
@@ -60,7 +92,10 @@ export async function createApp() {
   client.release();
   console.log("Connected to database, current time:", res.rows[0].now);
 
-  // Build the schema
+  // Ping S3 to ensure connectivity before starting
+  await pingS3();
+
+  // Build the GraphQL schema
   const schema = await createSchema();
 
   const app = express();

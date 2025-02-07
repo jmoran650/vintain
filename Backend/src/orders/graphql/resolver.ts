@@ -3,7 +3,8 @@
 import { Authorized, Resolver, Query, Mutation, Arg } from "type-graphql";
 import { OrderService } from "./service";
 import { Order, NewOrder, UUID, ShippingStatus } from "./schema";
-
+import { Service } from "typedi"
+@Service()
 @Resolver()
 export class OrderResolver {
   private readonly orderService = new OrderService();

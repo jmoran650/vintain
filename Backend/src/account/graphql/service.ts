@@ -1,5 +1,4 @@
 // src/account/graphql/service.ts
-
 import { Service } from "typedi";
 import { pool } from "../../../db";
 import { NewAccount, Account } from "./schema";
@@ -35,6 +34,7 @@ export class AccountService {
       profile: {
         username: row.profile?.username ?? "",
         bio: row.profile?.bio ?? null,
+        profilePicture: row.profile?.profilePicture ?? null,
       },
     };
   }
@@ -67,6 +67,7 @@ export class AccountService {
       profile: {
         username: row.profile?.username ?? "",
         bio: row.profile?.bio ?? null,
+        profilePicture: row.profile?.profilePicture ?? null,
       },
     };
   }
@@ -93,14 +94,18 @@ export class AccountService {
       profile: {
         username: row.profile?.username ?? "",
         bio: row.profile?.bio ?? null,
+        profilePicture: row.profile?.profilePicture ?? null,
       },
     }));
   }
 
   public async makeAccount(info: NewAccount): Promise<Account> {
-    const restrictedVal = info.roles.some(role => role.toLowerCase() === "vendor");
+    const restrictedVal = info.roles.some(
+      (role) => role.toLowerCase() === "vendor"
+    );
 
     // Explicitly cast parameters so that PostgreSQL can infer types.
+    // The JSON build now includes 'profilePicture' as NULL by default.
     const insert = `
       INSERT INTO account (email, restricted, data)
       VALUES (
@@ -115,7 +120,8 @@ export class AccountService {
           'roles', $5::text[],
           'profile', jsonb_build_object(
             'username', $6::text,
-            'bio', $8::text
+            'bio', $8::text,
+            'profilePicture', NULL
           )
         )
       )
@@ -142,6 +148,7 @@ export class AccountService {
       profile: {
         username: info.username,
         bio: info.bio || undefined,
+        profilePicture: undefined,
       },
     };
   }
@@ -158,7 +165,11 @@ export class AccountService {
     return true;
   }
 
-  private async modifyRestricted(byWhat: "id" | "email", setTo: boolean, byValue: UUID | Email) {
+  private async modifyRestricted(
+    byWhat: "id" | "email",
+    setTo: boolean,
+    byValue: UUID | Email
+  ) {
     const update = `UPDATE account SET restricted = $2 WHERE ${byWhat} = $1`;
     await pool.query(update, [byValue, setTo]);
     return true;
@@ -183,8 +194,11 @@ export class AccountService {
   public async updateProfile(
     id: UUID,
     username?: string,
-    bio?: string
+    bio?: string,
+    profilePicture?: string
   ): Promise<boolean> {
+    console.log("UpdateProfile input:", { id, username, bio, profilePicture });
+
     const select = `
       SELECT data->'profile' as profile
       FROM account
@@ -197,10 +211,12 @@ export class AccountService {
     }
 
     const oldProfile = rows[0].profile || {};
+    // Merge new values if provided
     const newProfile = {
       ...oldProfile,
       ...(username !== undefined ? { username } : {}),
       ...(bio !== undefined ? { bio } : {}),
+      ...(profilePicture !== undefined ? { profilePicture } : {}),
     };
 
     const updateSql = `
@@ -214,7 +230,6 @@ export class AccountService {
       WHERE id = $1
     `;
     await pool.query(updateSql, [id, JSON.stringify(newProfile)]);
-
     return true;
   }
 }

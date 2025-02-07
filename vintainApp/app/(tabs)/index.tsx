@@ -1,5 +1,5 @@
 // vintainApp/app/(tabs)/index.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -8,9 +8,10 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { fetchAllListings, searchListings } from '../../src/apiService';
+import { useAllListings, useSearchListings } from '../../hooks/useApi';
 
 interface Listing {
   id: string;
@@ -22,54 +23,47 @@ interface Listing {
 
 export default function ListingListScreen() {
   const router = useRouter();
-
-  const [listings, setListings] = useState<Listing[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-
   const pageSize = 5;
 
-  useEffect(() => {
-    loadListings(page);
-  }, [page]);
+  // Use the search query if a search term is provided, otherwise use the all listings query.
+  const allListingsQuery = useAllListings(page, pageSize);
+  const searchQuery = useSearchListings(searchTerm, page, pageSize);
+  const activeQuery = searchTerm.trim().length > 0 ? searchQuery : allListingsQuery;
 
-  async function loadListings(newPage: number) {
-    try {
-      let data;
-      if (isSearching && searchTerm.trim().length > 0) {
-        data = await searchListings(searchTerm, newPage, pageSize);
-      } else {
-        data = await fetchAllListings(newPage, pageSize);
-      }
-      setListings(data.listings);
-      setTotalCount(data.totalCount);
-    } catch (err) {
-      console.error('Failed to load listings:', err);
-    }
+  if (activeQuery.isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator color="#8d6e63" />
+      </SafeAreaView>
+    );
   }
 
-  async function onSearch() {
-    setIsSearching(true);
+  if (activeQuery.isError) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text>Error loading listings.</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const data = activeQuery.data;
+  const listings: Listing[] = data?.listings || [];
+  const totalCount: number = data?.totalCount || 0;
+
+  function onSearch() {
     setPage(1);
-    try {
-      const data = await searchListings(searchTerm, 1, pageSize);
-      setListings(data.listings);
-      setTotalCount(data.totalCount);
-    } catch (err) {
-      console.error('Search error:', err);
-    }
+    // The hook automatically refetches when searchTerm is part of the queryKey.
   }
 
   function onClearSearch() {
     setSearchTerm('');
-    setIsSearching(false);
     setPage(1);
   }
 
   function onNextPage() {
-    if ((page * pageSize) < totalCount) {
+    if (page * pageSize < totalCount) {
       setPage(prev => prev + 1);
     }
   }
@@ -84,10 +78,12 @@ export default function ListingListScreen() {
     return (
       <TouchableOpacity
         style={styles.listItem}
-        onPress={() => router.push({
-          pathname: '/listingDetail',
-          params: { listingId: item.id },
-        })}
+        onPress={() =>
+          router.push({
+            pathname: '/listingDetail',
+            params: { listingId: item.id },
+          })
+        }
       >
         <Text style={styles.listItemTitle}>
           {item.brand} - {item.name}
@@ -115,16 +111,12 @@ export default function ListingListScreen() {
         <Button title="Clear" onPress={onClearSearch} color="#a1887f" />
       </SafeAreaView>
 
-      <FlatList
-        data={listings}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
+      <FlatList data={listings} keyExtractor={(item) => item.id} renderItem={renderItem} />
 
       <SafeAreaView style={styles.paginationRow}>
         <Button title="Prev" onPress={onPrevPage} disabled={page === 1} color="#8d6e63" />
         <Text style={styles.pageText}>Page {page}</Text>
-        <Button title="Next" onPress={onNextPage} disabled={(page * pageSize) >= totalCount} color="#8d6e63" />
+        <Button title="Next" onPress={onNextPage} disabled={page * pageSize >= totalCount} color="#8d6e63" />
       </SafeAreaView>
 
       <Text style={styles.totalText}>Total Listings: {totalCount}</Text>

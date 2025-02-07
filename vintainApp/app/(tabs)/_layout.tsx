@@ -43,6 +43,16 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="createListing"
+        options={{
+          title: "New Listing",
+          // Use an icon (we’ll add "plus" to our IconSymbol mapping below)
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="plus" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",

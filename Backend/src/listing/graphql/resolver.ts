@@ -63,4 +63,16 @@ export class ListingResolver {
     );
     return { listings, totalCount };
   }
+
+  // In src/listing/graphql/resolver.ts, add:
+  @Authorized()
+  @Mutation(() => Boolean)
+  async updateListingImages(
+    @Arg("id") id: UUID,
+    @Arg("imageUrls", () => [String]) imageUrls: string[]
+  ): Promise<boolean> {
+    return this.listingService.updateListingImages(id, imageUrls);
+  }
+
+
 }

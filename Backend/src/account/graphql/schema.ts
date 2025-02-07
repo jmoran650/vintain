@@ -3,6 +3,8 @@ import { ObjectType, InputType, Field } from "type-graphql";
 import { MinLength } from "class-validator";
 import { Name, UUID, Email } from "../../common/types";
 
+// src/account/graphql/schema.ts
+
 @ObjectType()
 export class Profile {
   @Field()
@@ -11,6 +13,10 @@ export class Profile {
 
   @Field({ nullable: true })
   bio?: string;
+
+  // New field for profile picture URL
+  @Field({ nullable: true })
+  profilePicture?: string;
 }
 
 /**
