@@ -123,6 +123,7 @@ export async function fetchListingById(id: string) {
 }
 
 export async function fetchMyProfile(id: string) {
+  console.log("does fetchMyProfile have an id? ", id)
   const query = `
     query($id: String!) {
       account(input: $id) {

@@ -1,6 +1,6 @@
 {
   "output": {
-    "filePath": "repomix-backend.xml",
+    "filePath": "repomix-vintain.xml",
     "style": "xml",
     "parsableStyle": false,
     "fileSummary": false,
@@ -15,7 +15,7 @@
   "ignore": {
     "useGitignore": true,
     "useDefaultPatterns": true,
-    "customPatterns": []
+    "customPatterns": ["repomix-output.xml"]
   },
   "security": {
     "enableSecurityCheck": true
