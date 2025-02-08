@@ -1,8 +1,9 @@
-// src/account/graphql/service.ts
+// Backend/src/account/graphql/service.ts
 import { Service } from "typedi";
 import { pool } from "../../../db";
 import { NewAccount, Account } from "./schema";
 import { UUID, Email } from "../../common/types";
+import { mapAccountRow } from "../../common/jsonbMapping"; // <-- Imported new mapping utility
 
 @Service()
 export class AccountService {
@@ -25,18 +26,8 @@ export class AccountService {
     }
 
     const row = rows[0];
-    return {
-      id: row.id,
-      email: row.email,
-      restricted: row.restricted,
-      name: row.name,
-      roles: row.roles || [],
-      profile: {
-        username: row.profile?.username ?? "",
-        bio: row.profile?.bio ?? null,
-        profilePicture: row.profile?.profilePicture ?? null,
-      },
-    };
+    // Use the shared mapping function
+    return mapAccountRow(row);
   }
 
   public async getAccountByEmail(email: Email): Promise<Account> {
@@ -58,18 +49,8 @@ export class AccountService {
     }
 
     const row = rows[0];
-    return {
-      id: row.id,
-      email: row.email,
-      restricted: row.restricted,
-      name: row.name,
-      roles: row.roles || [],
-      profile: {
-        username: row.profile?.username ?? "",
-        bio: row.profile?.bio ?? null,
-        profilePicture: row.profile?.profilePicture ?? null,
-      },
-    };
+    // Use the shared mapping function
+    return mapAccountRow(row);
   }
 
   public async getAllAccounts(): Promise<Account[]> {
@@ -85,18 +66,8 @@ export class AccountService {
     `;
     const { rows } = await pool.query(select);
 
-    return rows.map((row: any) => ({
-      id: row.id,
-      email: row.email,
-      restricted: row.restricted,
-      name: row.name,
-      roles: row.roles || [],
-      profile: {
-        username: row.profile?.username ?? "",
-        bio: row.profile?.bio ?? null,
-        profilePicture: row.profile?.profilePicture ?? null,
-      },
-    }));
+    // Map each row using the shared function
+    return rows.map((row: any) => mapAccountRow(row));
   }
 
   public async makeAccount(info: NewAccount): Promise<Account> {

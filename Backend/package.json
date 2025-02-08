@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "tsc && node dist/index.js",
     "test": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message && npm run test:orders",
+    "tests": "npm run test:auth && npm run test:account && npm run test:listing && npm run test:message && npm run test:orders",
     "test:auth": "jest --config jest.config.js --testPathPattern='tests/domains/auth/' --runInBand",
     "test:account": "jest --config jest.config.js --testPathPattern='tests/domains/account/' --runInBand",
     "test:listing": "jest --config jest.config.js --testPathPattern='tests/domains/listing/' --runInBand",
