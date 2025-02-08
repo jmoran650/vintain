@@ -48,12 +48,11 @@ export default function CreateListingScreen() {
         contentType,
         folder: 'listing',
       });
-      const { data } = await generateUploadUrlMutation.mutateAsync({
+      const { preSignedUrl, fileUrl } = await generateUploadUrlMutation.mutateAsync({
         fileName,
         contentType,
         folder: 'listing',
       });
-      const { preSignedUrl, fileUrl } = data;
       console.log("[CreateListing] Received preSignedUrl:", preSignedUrl);
       console.log("[CreateListing] File URL will be:", fileUrl);
   

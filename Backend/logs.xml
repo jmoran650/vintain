@@ -1,0 +1,57 @@
+<log level="error" source="vintainApp/context/authContext.tsx"><message>Error loading token or fetching profile: Account with given ID does not exist.</message></log>
+<log level="error" source="vintainApp/context/authContext.tsx"><message>Error loading token or fetching profile: Account with given ID does not exist.</message></log>
+<log level="info" source="vintainApp/context/authContext.tsx"><message>Frontend: signOut successful</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Attempting login for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: a</message></log>
+<log level="error" source="Backend/src/auth/graphql/service.ts"><message>Login failed for email: a</message></log>
+<log level="error" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login failed for email: a</message></log>
+<log level="error" source="vintainApp/app/auth.tsx"><message>Login failed for email: a. Error: Invalid Credentials</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Attempting login for email: A</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: A</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: A</message></log>
+<log level="error" source="Backend/src/auth/graphql/service.ts"><message>Login failed for email: A</message></log>
+<log level="error" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login failed for email: A</message></log>
+<log level="error" source="vintainApp/app/auth.tsx"><message>Login failed for email: A. Error: Invalid Credentials</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Attempting sign up for email: a</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Sign up successful for email: a</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Attempting login for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: a</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: a</message></log>
+<log level="info" source="vintainApp/app/auth.tsx"><message>Login successful for email: a</message></log>
+<log level="info" source="vintainApp/context/authContext.tsx"><message>Frontend: signIn successful for user id: 5f8b12dc-61f8-49a3-9b81-dd39700365a6</message></log>
+<log level="info" source="vintainApp/context/authContext.tsx"><message>Frontend: Loaded profile for user id: 5f8b12dc-61f8-49a3-9b81-dd39700365a6</message></log>
+<log level="info" source="vintainApp/context/authContext.tsx"><message>Frontend: Loaded profile for user id: 5f8b12dc-61f8-49a3-9b81-dd39700365a6</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: wrong@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: wrong@example.com</message></log>
+<log level="error" source="Backend/src/auth/graphql/service.ts"><message>Login failed for email: wrong@example.com</message></log>
+<log level="error" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login failed for email: wrong@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: check called with token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMiIsImlhdCI6MTczODk3MDI2N30.uHuxN66MgHb2a6Lqq86uS-UbUZFeQ1WEH-Glz-ooDD8</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Checking token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMiIsImlhdCI6MTczODk3MDI2N30.uHuxN66MgHb2a6Lqq86uS-UbUZFeQ1WEH-Glz-ooDD8</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Token valid for user id: 00000000-0000-0000-0000-000000000002</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login called for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login attempt for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/service.ts"><message>Login successful for email: test@example.com</message></log>
+<log level="info" source="Backend/src/auth/graphql/resolver.ts"><message>Resolver: login successful for email: test@example.com</message></log>

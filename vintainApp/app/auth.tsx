@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { AuthContext } from "../context/authContext";
 import { signIn as apiSignIn, signUp as apiSignUp } from "../src/apiService";
+import { logInfo, logError } from "../src/utils/logger";
 
 export default function AuthScreen() {
   const { signIn } = useContext(AuthContext);
@@ -32,6 +33,7 @@ export default function AuthScreen() {
   async function handleSubmit() {
     if (isSignUp) {
       try {
+        await logInfo(`Attempting sign up for email: ${email}`, "vintainApp/app/auth.tsx");
         const newAccount = await apiSignUp(
           email,
           password,
@@ -40,18 +42,25 @@ export default function AuthScreen() {
           defaultRoles,
           username
         );
+        await logInfo(`Sign up successful for email: ${newAccount.email}`, "vintainApp/app/auth.tsx");
         Alert.alert("Success", `Account created for ${newAccount.email}`);
         setIsSignUp(false);
       } catch (err: any) {
-        Alert.alert("Error", err.message || "Failed to create account");
+        const errMsg = err instanceof Error ? err.message : String(err);
+        await logError(`Sign up failed for email: ${email}. Error: ${errMsg}`, "vintainApp/app/auth.tsx");
+        Alert.alert("Error", errMsg || "Failed to create account");
       }
     } else {
       try {
+        await logInfo(`Attempting login for email: ${email}`, "vintainApp/app/auth.tsx");
         const data = await apiSignIn(email, password);
+        await logInfo(`Login successful for email: ${email}`, "vintainApp/app/auth.tsx");
         Alert.alert("Welcome", `Hello, ${data.name.first}!`);
         await signIn(data.accessToken, data);
       } catch (err: any) {
-        Alert.alert("Error", err.message || "Failed to sign in");
+        const errMsg = err instanceof Error ? err.message : String(err);
+        await logError(`Login failed for email: ${email}. Error: ${errMsg}`, "vintainApp/app/auth.tsx");
+        Alert.alert("Error", errMsg || "Failed to sign in");
       }
     }
   }

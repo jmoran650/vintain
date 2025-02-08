@@ -1,8 +1,9 @@
-// src/auth/graphql/service.ts
+// Backend/src/auth/graphql/service.ts
 import { Service } from "typedi";
 import { pool } from "../../../db";
 import * as jwt from "jsonwebtoken";
 import { Credentials, Authenticated, Account, SessionAccount } from "./schema";
+import { logInfo, logError } from "../../common/logger";
 
 @Service()
 export class AuthService {
@@ -18,31 +19,34 @@ export class AuthService {
   }
 
   public async login(creds: Credentials): Promise<Authenticated | undefined> {
+    logInfo(`Login attempt for email: ${creds.email}`, "Backend/src/auth/graphql/service.ts");
     const account = await this.find(creds);
     if (!account) {
+      logError(`Login failed for email: ${creds.email}`, "Backend/src/auth/graphql/service.ts");
       return undefined;
     }
     const accessToken = jwt.sign(
-      {
-        id: account.id,
-      },
+      { id: account.id },
       process.env.MASTER_SECRET as string,
       { algorithm: "HS256" }
     );
-
+    logInfo(`Login successful for email: ${creds.email}`, "Backend/src/auth/graphql/service.ts");
     return { id: account.id, name: account.name, accessToken };
   }
 
   public async check(accessToken: string): Promise<SessionAccount> {
+    logInfo(`Checking token: ${accessToken}`, "Backend/src/auth/graphql/service.ts");
     return new Promise((resolve, reject) => {
       jwt.verify(
         accessToken,
         process.env.MASTER_SECRET as string,
         (err, decoded) => {
           if (err) {
+            logError(`Token check failed: ${err.message}`, "Backend/src/auth/graphql/service.ts");
             return reject(err);
           }
           const account = decoded as { id: string };
+          logInfo(`Token valid for user id: ${account.id}`, "Backend/src/auth/graphql/service.ts");
           resolve({ id: account.id });
         }
       );
